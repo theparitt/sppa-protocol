@@ -1,6 +1,17 @@
 # SPPA Protocol Suite
 
-An open contract for specialized software used by AI agents.
+Software capabilities for AI. An open capability and decision layer for specialized software used by AI agents.
+
+**Latest design direction:** SPPA standardizes semantic capabilities and comparable
+provider offers; MCP handles connections, calls, authentication, and negotiated
+task support. Main AI makes the final provider choice. Start with
+[Architecture & MCP boundaries](design/architecture.md) and the
+[AI Decision Contract](design/decision-contract.md). These are design proposals,
+not a deployed MCP binding. The existing Core 0.1.1 HTTP reference below remains
+reproducible; new work should not expand its execution transport.
+
+**Built for AI, end to end:** Discover → Select → Run → Monitor → Evaluate → Rate → Compose.
+AI agents operate the capabilities; humans supply intent and authority.
 
 **SPPA = Specific Purpose Platform/App.** A provider exposes high-level
 capabilities such as `video.transcode`; the caller discovers its contract,
@@ -11,7 +22,8 @@ verifies execution evidence. A provider does not need to contain AI.
 certification. Direct providers and private registries work without public Hub.
 SPPA Hub is a separate reference service in the sibling `sppahub` repository.
 
-- [Public specification website](https://theparitt.github.io/sppa-protocol/)
+- [Public introduction](https://theparitt.github.io/sppa-protocol/)
+- [Published document index](https://theparitt.github.io/sppa-protocol/documents/)
 - [Specification source](spec/0.1.1/overview.md)
 - [Schemas](schemas/0.1.1/) and [OpenAPI binding](openapi/0.1.1.json)
 - [Weakness review and design decisions](docs/open-decisions.md)

@@ -1,5 +1,13 @@
 # SPPA protocol working rules
 
+Latest user-approved direction is in design/architecture.md and
+design/decision-contract.md. SPPA owns semantic capabilities, provider offers,
+hard eligibility and decision evidence. MCP owns connection/auth/calls/tasks;
+do not extend the earlier HTTP/RPC/job transport as the new architecture.
+Preserve its existing exact snapshots and runnable proof. Main AI selects;
+Hub returns candidates. Human-facing landing explains purpose before specs.
+Distinguish proposed lifecycle/contracts from implemented reference behavior.
+
 Read README.md and docs/understanding.md before changes. Source history, when
 available locally, lives in ignored docs/reference. Public contract decisions
 are in docs/open-decisions.md and spec/0.1.1, with discussion context in

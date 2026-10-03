@@ -1,3 +1,4 @@
+import { landing } from './landing.mjs';
 export const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
 export function templates(B, docs, version = '0.1.1', assetVersion = '') {
@@ -6,7 +7,9 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   const origin = 'https://theparitt.github.io';
   const link = slug => B + `spec/${version}/${slug}/`;
   const nav = active => [
-    ['Documents', B, 'home'],
+    ['About SPPA', B, 'home'],
+    ['Architecture', B + 'design/architecture/', 'design'],
+    ['Documents', B + 'documents/', 'documents'],
     ['Specification', link('overview'), 'spec'],
     ['Schemas', B + 'schemas/', 'schemas'],
     ['Conformance', link('conformance'), 'conformance'],
@@ -18,10 +21,10 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="SPPA Core draft: an open protocol for AI agents to discover, invoke and verify specialized software capabilities.">
+  <meta name="description" content="Software capabilities for AI. SPPA is an open capability and decision layer for AI agents, designed to work with MCP.">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="${escape(title)} · SPPA Protocol">
-  <meta property="og:description" content="The SPPA Protocol Suite: specification, machine contracts and implementation documents.">
+  <meta property="og:description" content="Start with the goal, not the app. Discover capabilities, compare providers and let AI choose.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="${origin + B + path}">
   <title>${escape(title)} · SPPA Protocol</title>
@@ -45,6 +48,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
     </div>
   </header>
   ${version === '0.1.0' ? `<div class="wrap note archive-note">Archived 0.1.0 draft. <a href="${B}spec/0.1.1/overview/">Read the current 0.1.1 draft</a>.</div>` : ''}
+  ${version === '0.1.1' && ['spec','schemas','conformance','documents'].includes(active) ? `<div class="wrap note archive-note">Published HTTP reference · Core 0.1.1. The <a href="${B}design/architecture/">new design direction uses MCP</a>; these resources remain available to reproduce the earlier proof.</div>` : ''}
   ${body}
   <footer class="footer">
     <div class="wrap footer-inner">
@@ -64,13 +68,13 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}" ${current === 'home' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">New design direction</div><a href="${B}design/architecture/">SPPA & MCP boundaries</a><a href="${B}design/decision-contract/">AI Decision Contract</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
-  function home() {
+  function documents() {
     const contents = docs.map(([slug, title, description], index) => `<li><a href="${link(slug)}"><span class="contents-number">${String(index + 1).padStart(2, '0')}.</span><span><strong>${escape(title)}</strong><span class="contents-description">${escape(description)}</span></span></a></li>`).join('');
     return `<div class="doc-layout">
-      ${sidebar('home')}
+      ${sidebar('documents')}
       <main class="doc-body publication" id="main">
         <article class="prose">
           <header class="publication-header">
@@ -80,7 +84,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
             <dl class="publication-meta"><dt>Version</dt><dd>${version}</dd><dt>Status</dt><dd>Working draft</dd><dt>License</dt><dd><a href="${repository}/blob/main/LICENSE">Apache-2.0</a></dd></dl>
           </header>
           <h2 id="abstract">Abstract</h2>
-          <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. It describes how callers discover capabilities, apply constraints and policy, transfer artifacts, invoke jobs and verify execution evidence.</p>
+          <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> places capability meaning and provider decisions above MCP. The published Core ${version} below documents the earlier HTTP reference experiment; it is retained for reproducibility and is not an MCP implementation.</p>
           <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
           <h2 id="contents">Contents</h2>
           <ol class="contents-list">${contents}</ol>
@@ -95,5 +99,6 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
       <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
     </div>`;
   }
-  return { page, sidebar, home, link, repository, origin };
+  const home = () => landing(B, link, repository);
+  return { page, sidebar, home, documents, link, repository, origin };
 }

@@ -25,7 +25,7 @@ const docs = [
 ];
 const assetSources = await Promise.all(['site/style.css', 'site/site.mjs'].map(path => readFile(join(root,path))));
 const assetVersion = createHash('sha256').update(Buffer.concat(assetSources)).digest('hex').slice(0,12);
-const { page, sidebar, home, link, repository, origin } = templates(B, docs, '0.1.1', assetVersion);
+const { page, sidebar, home, documents, link, repository, origin } = templates(B, docs, '0.1.1', assetVersion);
 await rm(out,{recursive:true,force:true}); await mkdir(out,{recursive:true});
 async function put(path, body) { const target=join(out,path); await mkdir(dirname(target),{recursive:true});await writeFile(target,body); }
 const entries=[],archivePaths=[];
@@ -45,7 +45,21 @@ for (const V of ['0.1.0','0.1.1']) {
  if(V==='0.1.1') entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()}); else archivePaths.push(path);
  }
 }
-await put('index.html',page('SPPA Protocol Suite',home(),'home'));
+await put('index.html',page('Software capabilities for AI',home(),'home'));
+await put('documents/index.html',page('SPPA Protocol Suite',documents(),'documents','documents/'));
+entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; new architecture uses MCP.'});
+for (const [slug,title] of [['architecture','Architecture & MCP boundaries'],['decision-contract','AI Decision Contract']]) {
+ const text = await readFile(join(root,`design/${slug}.md`),'utf8');
+ const renderer = new Renderer();
+ const headings = [];
+ renderer.heading = token => { const label=token.text.replaceAll('`','').replaceAll('*','');const id=label.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');if(token.depth===2)headings.push([id,label]);return `<h${token.depth} id="${id}">${escape(label)}</h${token.depth}>`; };
+ renderer.code = token => `<div class="code-block"><div class="code-label">${escape(token.lang||'EXAMPLE')}</div><button type="button" class="copy" aria-label="Copy code example">Copy</button><pre><code>${escape(token.text)}</code></pre></div>`;
+ const html=marked.parse(text,{renderer}).replaceAll('<table>','<div class="table-wrap"><table>').replaceAll('</table>','</table></div>');
+ const path=`design/${slug}/`;
+ const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">Design direction / Proposed semantics above MCP</div><article class="prose">${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
+ await put(path+'index.html',page(title,body,'design',path));
+ entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()});
+}
 const files=(await readdir(join(root,'schemas/0.1.1'))).filter(x=>x.endsWith('.json')).sort();
 const rows=files.map(file=>`<div class="schema-row"><div><strong>${escape(file)}</strong><small>JSON Schema 2020-12 · Draft 0.1.1</small></div><a href="${B}schemas/0.1.1/${file}" download>Download JSON ↓</a></div>`).join('');
 const schemaBody=`<div class="doc-layout">${sidebar('schemas')}<main class="doc-body" id="main"><div class="breadcrumb">Machine contracts / Core 0.1.1</div><span class="doc-status">WORKING DRAFT</span><article class="prose"><h1>Schemas & API</h1><p>Versioned contracts for validation and interoperability. Use the schemas with the normative chapters; a schema alone cannot prove authorization or execution semantics.</p><div class="actions"><a class="button primary" href="${B}schemas/0.1.1/bundle.json" download>Download schema bundle ↓</a><a class="button" href="${B}openapi/0.1.1.json" download>OpenAPI 3.1.1 ↓</a></div><div class="note">Draft snapshot: pin a repository commit during review. Later protocol families and advanced transfer profiles are not implemented.</div><h2>Core schemas</h2><div class="schema-list">${rows}</div><h2>Examples and discovery</h2><p><a href="${B}examples/manifest.json">Provider manifest</a> · <a href="${B}examples/job-create.json">Typed invocation</a> · <a href="${B}examples/artifact.json">Artifact metadata</a> · <a href="${B}.well-known/sppa.json">Specification catalog</a> · <a href="${B}schemas/index.json">Schema index</a></p><p>Previous draft: <a href="${B}spec/0.1.0/overview/">0.1.0 chapters</a> &middot; <a href="${B}schemas/0.1.0/bundle.json" download>0.1.0 schema bundle</a> &middot; <a href="${B}openapi/0.1.0.json" download>0.1.0 API binding</a></p><h2>Offline validation</h2><div class="code-block"><div class="code-label">SHELL</div><button type="button" class="copy" aria-label="Copy validation command">Copy</button><pre><code>npm ci\nnpm run validate -- manifest examples/manifest.json</code></pre></div><p>The validator loads local schemas. No remote fetch is needed. The bundle embeds schema resources with their canonical IDs.</p></article></main></div>`;
@@ -69,4 +83,4 @@ await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));
-console.log(`Built ${docs.length+2} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
+console.log(`Built ${docs.length+5} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);

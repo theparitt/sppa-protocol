@@ -37,3 +37,20 @@ explicit decisions. Historical examples are not normative contracts.
 
 Source conversations are retained locally, excluded from public Git. Public
 contracts are the curated specification, schemas, API binding and examples.
+
+
+## Superseding boundary: AI decisions above MCP (2026-10-03)
+
+The latest direction moves connection/auth/call/task plumbing to MCP. Preserve
+existing HTTP snapshots and proof; do not extend that transport for new semantics.
+New design starts with the AI Decision Contract, separating capability contracts,
+job-specific provider offers, scoped reputation, and caller requirements.
+See [architecture](../design/architecture.md) and
+[decision contract](../design/decision-contract.md).
+
+Weaknesses identified: unbound/stale offers; estimates treated as spending caps;
+quality compared across different benchmarks; self-declared verification; unknown
+licenses passing eligibility; hashes revealing private cached results; same MIME
+type mistaken for semantic compatibility; provider saturation mistaken for failure.
+The new proposal defines requirements for each before machine schemas/MCP binding.
+These are design resolutions; runtime enforcement is not claimed.

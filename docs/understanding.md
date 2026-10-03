@@ -1,5 +1,22 @@
 # Reconciled SPPA understanding
 
+## Latest boundary and landing correction
+
+The 2026-10-03 follow-up supersedes the earlier execution-plumbing direction.
+SPPA is a capability and decision layer above MCP. Main AI supplies hard
+requirements and priorities and chooses among comparable provider offers.
+Hub filters and returns a decision surface; it does not make the final choice.
+MCP supplies connection, authentication, calls, progress and negotiated Tasks.
+See [architecture](../design/architecture.md) and
+[AI Decision Contract](../design/decision-contract.md).
+
+The full AI lifecycle is Discover, Select, Run, Monitor, Evaluate, Rate, Compose.
+Capabilities are operated by AI agents, with human intent and authority upstream.
+The homepage explains this purpose, problem, comparison and proof before linking
+to separate specification pages. Keep its white, clean visual style.
+The existing HTTP Core 0.1.1 proof remains historical implementation evidence;
+do not describe the new MCP/offer/reputation design as already implemented.
+
 Prepared 2026-10-03 from the full shared discussion, final
 Technical Master Plan, and
 Protocol Suite.

@@ -6,7 +6,7 @@ test('Desktop reading layout, navigation and documentation search', async({page}
  await page.setViewportSize({width:1440,height:1000});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto(root);
- await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Protocol Suite');
+ await expect(page.getByRole('heading',{level:1})).toHaveText('Software capabilitiesfor AI.');
  await noOverflow(page);await mkdir('artifacts',{recursive:true});await page.screenshot({path:'artifacts/home-desktop.png',fullPage:false,animations:'disabled'});
  await page.getByRole('button',{name:'Search documentation'}).click();
  await page.getByRole('searchbox').fill('receipt');
@@ -30,8 +30,37 @@ test('Keyboard search and escaped empty-result feedback',async({page})=>{
  await page.getByRole('searchbox').fill('<script>');await expect(page.locator('#search-results')).toContainText('No chapters match');
  await page.keyboard.press('Escape');await expect(page.locator('#search-dialog')).not.toBeVisible();
 });
+test('Provider comparison filters hard requirements before ordering preferences',async({page})=>{
+ await page.goto(root);
+ const rows=page.locator('#decision-offers tr');
+ await expect(rows.first().getByRole('rowheader')).toHaveText('B');
+ await expect(rows.filter({hasText:'commercial unknown'})).toContainText('Excluded:');
+ await page.getByLabel('Compare by',{exact:true}).selectOption('quality');
+ await expect(rows.first().getByRole('rowheader')).toHaveText('A');
+ await expect(page.locator('#decision-summary')).toContainText('main AI makes the final choice');
+ await page.getByLabel('Maximum total cost (USD)').selectOption('0.05');
+ await expect(rows.first().getByRole('rowheader')).toHaveText('B');
+ await expect(rows.filter({hasText:'$0.18'})).toContainText('over budget');
+ await page.getByLabel('Required privacy').selectOption('public');
+ await expect(rows.filter({hasText:'commercial unknown'})).toContainText('Excluded: commercial rights unknown');
+ await page.getByLabel('Maximum total cost (USD)').selectOption('0.02');
+ await expect(page.locator('#decision-summary')).toContainText('No eligible offers');
+});
+test('Purpose precedes documents and the new architecture is separate from the proof',async({page})=>{
+ await page.goto(root);
+ await expect(page.locator('.agent-audience')).toContainText('AI agents to operate');
+ await expect(page.locator('.lifecycle-list h3')).toHaveText(['Discover','Select','Run','Monitor','Evaluate','Rate','Compose']);
+ await page.getByRole('link',{name:'Read the documents',exact:false}).click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Protocol Suite');
+ await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Architecture',exact:true}).click();
+ await expect(page.getByRole('heading',{level:1})).toContainText('capability decisions above MCP');
+ await expect(page.locator('main')).toContainText('They are not MCP bindings');
+});
 test('Every chapter renders without horizontal page overflow on narrow screens',async({page})=>{
  await page.setViewportSize({width:320,height:740});
+ for(const path of ['', 'documents/', 'design/architecture/', 'design/decision-contract/']) {
+  const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
+ }
  for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){
   const response=await page.goto(`${root}spec/0.1.1/${chapter}/`);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }

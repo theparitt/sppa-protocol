@@ -1,4 +1,43 @@
 const base = document.documentElement.dataset.base;
+const decisionControls = document.querySelector('#decision-controls');
+if (decisionControls) {
+  const offers = [
+    { id: 'A', cost: 0.18, wait: 38, run: 70, quality: 0.96, samples: 400, privacy: 'confidential', commercial: 'allowed' },
+    { id: 'B', cost: 0.04, wait: 2, run: 90, quality: 0.90, samples: 800, privacy: 'confidential', commercial: 'allowed' },
+    { id: 'C', cost: 0.01, wait: 0, run: 15, quality: 0.98, samples: 5, privacy: 'public', commercial: 'unknown' },
+  ];
+  function compareOffers() {
+    const budget = Number(document.querySelector('#decision-budget').value);
+    const privacy = document.querySelector('#decision-privacy').value;
+    const priority = document.querySelector('#decision-priority').value;
+    const candidates = offers.map(offer => {
+      const reasons = [];
+      if (offer.cost > budget) reasons.push('over budget');
+      if (privacy === 'confidential' && offer.privacy !== 'confidential') reasons.push('privacy');
+      if (offer.commercial !== 'allowed') reasons.push('commercial rights unknown');
+      return { ...offer, reasons };
+    });
+    const metric = o => priority === 'quality' ? -o.quality : priority === 'cost' ? o.cost : o.wait + o.run;
+    candidates.sort((a, b) => Number(!!a.reasons.length) - Number(!!b.reasons.length) || metric(a) - metric(b) || a.id.localeCompare(b.id));
+    const body = document.querySelector('#decision-offers');
+    body.replaceChildren();
+    for (const offer of candidates) {
+      const row = document.createElement('tr');
+      row.dataset.excluded = String(offer.reasons.length > 0);
+      const values = [offer.id, `$${offer.cost.toFixed(2)}`, `${offer.wait}s + ${offer.run}s = ${offer.wait + offer.run}s`, `${offer.quality.toFixed(2)} / ${offer.samples} samples`, `${offer.privacy} / commercial ${offer.commercial}`, offer.reasons.length ? 'Excluded: ' + offer.reasons.join('; ') : 'Eligible'];
+      values.forEach((value, i) => { const cell = document.createElement(i ? 'td' : 'th'); if (!i) cell.scope = 'row'; cell.textContent = value; row.append(cell); });
+      body.append(row);
+    }
+    const eligible = candidates.filter(o => !o.reasons.length);
+    const dimension = priority === 'quality' ? 'highest measured quality' : priority === 'cost' ? 'lowest total cost' : 'shortest estimated completion time';
+    document.querySelector('#decision-summary').textContent = eligible.length
+      ? `${eligible.length} eligible offer${eligible.length === 1 ? '' : 's'}. ${eligible[0].id} has the ${dimension} among eligible offers. This orders candidates; the main AI makes the final choice.`
+      : 'No eligible offers. Relaxing a preference cannot override a failed hard requirement. The agent must change its requirements or find another provider.';
+  }
+  decisionControls.addEventListener('submit', event => event.preventDefault());
+  decisionControls.addEventListener('change', compareOffers);
+  compareOffers();
+}
 document.querySelectorAll('.print-button').forEach(button => button.addEventListener('click', () => window.print()));
 const dialog = document.querySelector('#search-dialog');
 const input = document.querySelector('#search-input');
