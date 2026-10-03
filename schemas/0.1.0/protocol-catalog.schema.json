@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/protocol-catalog.schema.json",
+  "title": "SPPA specification catalog",
+  "type": "object",
+  "properties": {
+    "sppa": {
+      "const": "0.1.0"
+    },
+    "kind": {
+      "const": "specification"
+    },
+    "status": {
+      "const": "working-draft"
+    },
+    "title": {
+      "type": "string"
+    },
+    "specification": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schemas": {
+      "type": "string",
+      "format": "uri"
+    },
+    "openapi": {
+      "type": "string",
+      "format": "uri"
+    },
+    "conformance": {
+      "type": "string",
+      "format": "uri"
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": [
+    "sppa",
+    "kind",
+    "status",
+    "title",
+    "specification",
+    "schemas",
+    "openapi",
+    "conformance",
+    "repository"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,35 @@
+{
+  "name": "sppa-protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SPPA Core draft specification, schemas, conformance and public standards website",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "npm test && npm run build && node scripts/check-site.mjs",
+    "build": "node scripts/build-site.mjs",
+    "demo": "node scripts/demo.mjs",
+    "provider": "node reference/ffmpeg/server.mjs",
+    "preview": "node scripts/preview.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test:site": "playwright test"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "canonicalize": "^2.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "marked": "^15.0.12"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theparitt/sppa-protocol.git"
+  },
+  "homepage": "https://theparitt.github.io/sppa-protocol/"
+}

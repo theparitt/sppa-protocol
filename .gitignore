@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.tmp/
+.env
+.env.*
+!.env.example
+*.local
+.DS_Store
+Thumbs.db
+.vscode/
+# Source conversation retained locally; publish curated specification only
+docs/reference/
+artifacts/
+test-results/
+playwright-report/

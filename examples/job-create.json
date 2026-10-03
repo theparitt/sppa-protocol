@@ -1,0 +1,35 @@
+{
+  "sppa": "0.1.0",
+  "type": "job.create",
+  "request_id": "req_example01",
+  "timestamp": "2026-10-03T05:01:00Z",
+  "caller": {
+    "id": "agent://example"
+  },
+  "idempotency_key": "transcode-example01",
+  "payload": {
+    "capability": "video.transcode",
+    "capability_version": "1.0.0",
+    "input": {
+      "artifact": "artifact://com.example.ffmpeg/art_example01"
+    },
+    "parameters": {
+      "codec": "h264",
+      "crf": 24
+    },
+    "policy": {
+      "privacy": "private",
+      "execution_location": "remote",
+      "data_region": "unspecified",
+      "training_use": false,
+      "max_retention_seconds": 3600,
+      "allow_content_logging": false,
+      "granted_permissions": [
+        "artifact.read",
+        "artifact.write"
+      ],
+      "human_approval": "not_required"
+    },
+    "deadline": "2026-10-03T05:02:00Z"
+  }
+}

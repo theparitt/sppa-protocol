@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/manifest.schema.json",
+  "title": "SPPA manifest (Draft 0.1.0)",
+  "type": "object",
+  "properties": {
+    "sppa": {
+      "const": "0.1.0"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "provider"
+      ]
+    },
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$",
+      "maxLength": 128
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "provider_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "endpoint": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2048
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/capability.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "core.http-artifact",
+          "security.signed_requests"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "contains": {
+        "const": "core.http-artifact"
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "bearer",
+              "oauth2",
+              "mtls"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "receipt_algorithm": {
+          "const": "Ed25519"
+        },
+        "canonicalization": {
+          "const": "RFC8785"
+        },
+        "keys_uri": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "authentication",
+        "receipt_algorithm",
+        "canonicalization",
+        "keys_uri"
+      ],
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:\\.[a-z0-9_-]+)+$"
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "sppa",
+    "kind",
+    "provider_id",
+    "name",
+    "provider_version",
+    "endpoint",
+    "capabilities",
+    "profiles",
+    "security"
+  ],
+  "additionalProperties": false
+}

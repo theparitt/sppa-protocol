@@ -1,0 +1,86 @@
+{
+  "id": "video.transcode",
+  "version": "1.0.0",
+  "name": "Video transcode",
+  "description": "Transcode a video artifact to H.264 MP4 with bounded CRF quality.",
+  "features": [
+    "codec_change",
+    "audio_copy"
+  ],
+  "parameters_schema": {
+    "type": "object",
+    "properties": {
+      "codec": {
+        "type": "string",
+        "enum": [
+          "h264"
+        ]
+      },
+      "crf": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 51
+      }
+    },
+    "required": [
+      "codec",
+      "crf"
+    ],
+    "additionalProperties": false
+  },
+  "result_schema": {
+    "type": "object",
+    "properties": {
+      "codec": {
+        "const": "h264"
+      },
+      "media_type": {
+        "const": "video/mp4"
+      },
+      "size_bytes": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "required": [
+      "codec",
+      "media_type",
+      "size_bytes"
+    ],
+    "additionalProperties": false
+  },
+  "constraints": {
+    "max_input_bytes": 8388608,
+    "input_media_types": [
+      "video/mp4"
+    ],
+    "output_media_types": [
+      "video/mp4"
+    ],
+    "privacy_levels": [
+      "public",
+      "private",
+      "confidential"
+    ],
+    "execution_locations": [
+      "remote"
+    ],
+    "data_regions": [
+      "unspecified"
+    ],
+    "training_use": false,
+    "retention_seconds": 3600,
+    "content_logging": false,
+    "required_permissions": [
+      "artifact.read",
+      "artifact.write"
+    ],
+    "human_approval_required": false,
+    "max_job_duration_seconds": 60,
+    "max_concurrency": 2,
+    "max_output_bytes": 16777216
+  },
+  "interaction_modes": [
+    "async_job"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/receipt.schema.json",
+  "title": "SPPA receipt (Draft 0.1.0)",
+  "type": "object",
+  "properties": {
+    "sppa": {
+      "const": "0.1.0"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt_[A-Za-z0-9_-]{8,64}$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[A-Za-z0-9_-]{8,64}$"
+    },
+    "caller_id": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2048
+    },
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$",
+      "maxLength": 128
+    },
+    "capability": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 128
+    },
+    "capability_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "parameters_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "type": "string",
+          "pattern": "^artifact://[a-z0-9]+(?:[.-][a-z0-9]+)+/art_[A-Za-z0-9_-]{8,64}$",
+          "maxLength": 256
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "artifact",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "type": "string",
+          "pattern": "^artifact://[a-z0-9]+(?:[.-][a-z0-9]+)+/art_[A-Za-z0-9_-]{8,64}$",
+          "maxLength": 256
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "artifact",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "status": {
+      "const": "completed"
+    },
+    "signature": {
+      "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/signature.schema.json"
+    }
+  },
+  "required": [
+    "sppa",
+    "receipt_id",
+    "job_id",
+    "caller_id",
+    "provider_id",
+    "capability",
+    "capability_version",
+    "parameters_sha256",
+    "input",
+    "output",
+    "started_at",
+    "finished_at",
+    "status",
+    "signature"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,515 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/envelope.schema.json",
+  "title": "SPPA envelope (Draft 0.1.0)",
+  "type": "object",
+  "properties": {
+    "sppa": {
+      "const": "0.1.0"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "job.create",
+        "job.created",
+        "job.get",
+        "job.snapshot",
+        "job.cancel",
+        "job.retry",
+        "artifact.get",
+        "artifact.metadata",
+        "transfer.prepare_upload",
+        "transfer.prepare_download",
+        "transfer.prepared",
+        "transfer.complete",
+        "transfer.abort",
+        "health.get",
+        "health.snapshot",
+        "receipt.get",
+        "receipt.result",
+        "error"
+      ]
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^req_[A-Za-z0-9_-]{8,64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "caller": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$",
+      "maxLength": 128
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "nonce": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 128
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "signature": {
+      "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/signature.schema.json"
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:\\.[a-z0-9_-]+)+$"
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "sppa",
+    "type",
+    "request_id",
+    "timestamp",
+    "caller",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.create"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/job-create.schema.json"
+          }
+        },
+        "required": [
+          "idempotency_key"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.created"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/job.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.snapshot"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/job.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.get"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "pattern": "^job_[A-Za-z0-9_-]{8,64}$"
+              }
+            },
+            "required": [
+              "job_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.cancel"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "pattern": "^job_[A-Za-z0-9_-]{8,64}$"
+              }
+            },
+            "required": [
+              "job_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "job.retry"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "pattern": "^job_[A-Za-z0-9_-]{8,64}$"
+              },
+              "deadline": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+              }
+            },
+            "required": [
+              "job_id",
+              "deadline"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "idempotency_key"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "artifact.get"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "artifact": {
+                "type": "string",
+                "pattern": "^artifact://[a-z0-9]+(?:[.-][a-z0-9]+)+/art_[A-Za-z0-9_-]{8,64}$",
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "artifact"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "artifact.metadata"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/artifact.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "transfer.prepare_upload"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/upload-create.schema.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "transfer.prepare_download"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "artifact": {
+                "type": "string",
+                "pattern": "^artifact://[a-z0-9]+(?:[.-][a-z0-9]+)+/art_[A-Za-z0-9_-]{8,64}$",
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "artifact"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "transfer.prepared"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/transfer.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "transfer.complete"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "transfer_id": {
+                "type": "string",
+                "pattern": "^transfer_[A-Za-z0-9_-]{8,64}$"
+              }
+            },
+            "required": [
+              "transfer_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "transfer.abort"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "transfer_id": {
+                "type": "string",
+                "pattern": "^transfer_[A-Za-z0-9_-]{8,64}$"
+              }
+            },
+            "required": [
+              "transfer_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "health.get"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "health.snapshot"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/health.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "receipt.get"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "receipt_id": {
+                "type": "string",
+                "pattern": "^receipt_[A-Za-z0-9_-]{8,64}$"
+              }
+            },
+            "required": [
+              "receipt_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "receipt.result"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/receipt.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.0/error.schema.json"
+          }
+        },
+        "required": [
+          "provider_id"
+        ]
+      }
+    }
+  ],
+  "dependentRequired": {
+    "signature": [
+      "nonce",
+      "expires_at",
+      "provider_id"
+    ]
+  }
+}
