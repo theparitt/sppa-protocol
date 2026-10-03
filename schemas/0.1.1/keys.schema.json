@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/keys.schema.json",
+  "title": "SPPA keys (Draft 0.1.1)",
+  "type": "object",
+  "properties": {
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$",
+      "maxLength": 128
+    },
+    "keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "algorithm": {
+            "const": "Ed25519"
+          },
+          "public_key": {
+            "type": "object",
+            "properties": {
+              "kty": {
+                "const": "OKP"
+              },
+              "crv": {
+                "const": "Ed25519"
+              },
+              "x": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{43}$"
+              }
+            },
+            "required": [
+              "kty",
+              "crv",
+              "x"
+            ],
+            "additionalProperties": false
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+          }
+        },
+        "required": [
+          "key_id",
+          "algorithm",
+          "public_key",
+          "valid_from",
+          "valid_until"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "provider_id",
+    "keys"
+  ],
+  "additionalProperties": false
+}

@@ -32,7 +32,7 @@ test('Keyboard search and escaped empty-result feedback',async({page})=>{
 });
 test('Every chapter renders without horizontal page overflow on narrow screens',async({page})=>{
  await page.setViewportSize({width:320,height:740});
- for(const chapter of ['overview','messages','discovery','policy','jobs','artifacts','security','errors','quickstart','conformance','governance']){
-  const response=await page.goto(`${root}spec/0.1.0/${chapter}/`);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
+ for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){
+  const response=await page.goto(`${root}spec/0.1.1/${chapter}/`);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
 });

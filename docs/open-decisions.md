@@ -1,12 +1,14 @@
 # Draft weakness review and decisions
 
 The shared discussions established the architecture, but their sample wire
-formats were inconsistent. The authored Core 0.1.0 draft makes the following
+formats were inconsistent. The authored Core 0.1.1 draft makes the following
 explicit decisions. Historical examples are not normative contracts.
 
 | Weakness | Implemented resolution | Evidence |
 | --- | --- | --- |
-| Conflicting manifest/envelope fields | `sppa: "0.1.0"`, provider/specification kinds, typed payloads, strict extension rules | Shape/operation/version tests |
+| Busy health made the queue unusable | Operational health and saturation separated; per-capability execution contract, live capacity and final provider admission | Admission and HTTP queue regression tests |
+| Hidden rate/queue/retry limits | Declared FIFO depth, rolling caller rate, end-to-end timeout, shared root attempt budget and typed backpressure | Caller/capability isolation, rate headers, root branching and idempotent replay tests |
+| Conflicting manifest/envelope fields | `sppa: "0.1.1"`, provider/specification kinds, typed payloads, strict extension rules | Shape/operation/version tests |
 | Unspecified units and identifiers | Full versions, UTC timestamps, byte sizes, reverse-DNS providers, opaque scoped artifact IDs | Malformed timestamp/identity tests |
 | Hard constraints mixed with ranking | Eligibility gates first; no privacy downgrade, supported privacy, location/region, training/logging/retention, permission/approval checks | Hard rejection tests |
 | LOCAL_ONLY could mean LAN | Same caller device; private network is separate | Remote LOCAL_ONLY rejection |

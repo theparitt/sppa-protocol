@@ -4,16 +4,17 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import canonicalize from 'canonicalize';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export class ProtocolError extends Error {
-  constructor(code, message, details = {}, retryable = false) {
+  constructor(code, message, details = {}, retryable = false, retryAfterMs) {
     super(message); this.code = code; this.details = details; this.retryable = retryable;
+    this.retryAfterMs = retryAfterMs;
   }
-  toJSON() { return { code: this.code, message: this.message, retryable: this.retryable, details: this.details }; }
+  toJSON() { return { code: this.code, message: this.message, retryable: this.retryable, details: this.details, ...(this.retryAfterMs === undefined ? {} : { retry_after_ms: this.retryAfterMs }) }; }
 }
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false });
 addFormats(ajv);
-const directory = new URL('../schemas/0.1.0/', import.meta.url);
+const directory = new URL('../schemas/0.1.1/', import.meta.url);
 const schemas = new Map();
 for (const name of readdirSync(directory).filter(n => n.endsWith('.json'))) {
   const schema = JSON.parse(readFileSync(new URL(name, directory), 'utf8'));
@@ -126,8 +127,20 @@ export function checkEligibility(capability, artifact, policy, health, now = Dat
   fail(c.required_permissions.every(p => policy.granted_permissions.includes(p)), 'permissions');
   fail(policy.human_approval !== 'pending' && (!c.human_approval_required || policy.human_approval === 'approved'), 'human_approval');
   fail(health.provider_id === artifact.provider_id, 'provider_identity');
-  fail(health.status === 'healthy' && Date.parse(health.observed_at) <= now + 30000 && Date.parse(health.valid_until) > now && Date.parse(health.valid_until) > Date.parse(health.observed_at), 'health');
-  return { eligible: reasons.length === 0, reasons };
+  fail(health.status !== 'unavailable' && Date.parse(health.observed_at) <= now + 30000 && Date.parse(health.valid_until) > now && Date.parse(health.valid_until) > Date.parse(health.observed_at), 'health');
+  const snapshot = health.capabilities.find(x => x.capability === capability.id && x.capability_version === capability.version);
+  let capacityValid = false;
+  try { validateCapacity(snapshot, capability.execution); capacityValid = true; } catch {}
+  fail(capacityValid && health.capabilities.filter(x => x.capability === capability.id && x.capability_version === capability.version).length === 1, 'capacity_observation');
+  return { eligible: reasons.length === 0, reasons, accepting_jobs: capacityValid && snapshot.accepting_jobs };
+}
+export function validateCapacity(snapshot, execution) {
+  validate('capacity', snapshot); validate('execution', execution);
+  const c = snapshot.capacity, q = snapshot.queue;
+  if (c.max_concurrency !== execution.max_concurrency || c.running > c.max_concurrency || c.available !== c.max_concurrency - c.running || q.max_depth !== execution.queue.max_depth || q.depth > q.max_depth || (!execution.queue.enabled && q.depth !== 0) || snapshot.accepting_jobs !== (c.available > 0 || (execution.queue.enabled && q.depth < q.max_depth))) {
+    throw new ProtocolError('invalid_request', 'Inconsistent capacity observation');
+  }
+  return snapshot;
 }
 function signingBytes(document, context) {
   assertIJSON(document);

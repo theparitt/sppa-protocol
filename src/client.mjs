@@ -24,7 +24,7 @@ export class Client {
     if (Math.abs(Date.parse(data.timestamp) - Date.now()) > 300000) throw new ProtocolError('invalid_request', 'Stale response timestamp');
     if (data.request_id !== body.request_id || data.caller.id !== body.caller.id) throw new ProtocolError('invalid_request', 'Response correlation mismatch');
     if (data.provider_id !== this.providerId) throw new ProtocolError('invalid_request', 'Provider identity mismatch');
-    if (!response.ok || data.type === 'error') throw new ProtocolError(data.payload.code ?? 'internal_error', data.payload.message ?? 'Request failed', data.payload.details, data.payload.retryable);
+    if (!response.ok || data.type === 'error') throw new ProtocolError(data.payload.code ?? 'internal_error', data.payload.message ?? 'Request failed', data.payload.details, data.payload.retryable, data.payload.retry_after_ms);
     const expected = { 'job.create': 'job.created', 'job.retry': 'job.created', 'job.get': 'job.snapshot', 'job.cancel': 'job.snapshot', 'artifact.get': 'artifact.metadata', 'transfer.prepare_upload': 'transfer.prepared', 'transfer.prepare_download': 'transfer.prepared', 'transfer.complete': 'artifact.metadata', 'transfer.abort': 'transfer.prepared', 'health.get': 'health.snapshot', 'receipt.get': 'receipt.result' };
     if (data.provider_id !== this.providerId || data.type !== expected[type]) throw new ProtocolError('invalid_request', 'Provider identity or response type mismatch');
     return data.payload;

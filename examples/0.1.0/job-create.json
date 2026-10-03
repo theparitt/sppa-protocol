@@ -1,5 +1,5 @@
 {
-  "sppa": "0.1.1",
+  "sppa": "0.1.0",
   "type": "job.create",
   "request_id": "req_example01",
   "timestamp": "2026-10-03T05:01:00Z",

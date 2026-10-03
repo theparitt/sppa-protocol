@@ -1,6 +1,6 @@
 # Core implementation status and next work
 
-Core 0.1.0 now has an authored specification, schemas, validators, a client,
+Core 0.1.1 now has an authored specification, schemas, validators, a client,
 FFmpeg reference provider, executable tests and a standards website.
 See [README](../README.md) for commands and [review decisions](open-decisions.md)
 for corrected weaknesses.
@@ -16,7 +16,7 @@ has link/schema-bundle checks and desktop/mobile browser tests.
 
 The harness is loopback and ephemeral. Restart durability, independent
 implementations and production security/storage review remain open; see
-[conformance limits](../spec/0.1.0/conformance.md).
+[conformance limits](../spec/0.1.1/conformance.md).
 
 ## Next: integrate Hub separately
 

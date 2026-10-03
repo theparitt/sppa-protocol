@@ -1,9 +1,9 @@
 {
-  "sppa": "0.1.1",
+  "sppa": "0.1.0",
   "kind": "provider",
   "provider_id": "com.example.ffmpeg",
   "name": "FFmpeg reference SPPA",
-  "provider_version": "0.1.1",
+  "provider_version": "0.1.0",
   "endpoint": "https://provider.example/v1",
   "capabilities": [
     {
@@ -84,29 +84,13 @@
           "artifact.write"
         ],
         "human_approval_required": false,
+        "max_job_duration_seconds": 60,
+        "max_concurrency": 2,
         "max_output_bytes": 16777216
       },
       "interaction_modes": [
         "async_job"
-      ],
-      "execution": {
-        "max_concurrency": 2,
-        "queue": {
-          "enabled": true,
-          "max_depth": 64,
-          "policy": "fifo"
-        },
-        "rate_limit": {
-          "requests": 120,
-          "window_seconds": 60,
-          "scope": "caller"
-        },
-        "timeout_seconds": 60,
-        "retry": {
-          "supported": true,
-          "max_attempts": 3
-        }
-      }
+      ]
     }
   ],
   "profiles": [

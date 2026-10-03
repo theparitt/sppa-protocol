@@ -10,6 +10,7 @@ assistant proposals are not automatically agreed requirements.
 | Bleepwave/RabbitMQ | Earlier diagram placed them under Hub | User correction (180), corrected architecture (183), final plan (220): provider internals, no Hub dependency |
 | Direction | Marketplace and many apps | Protocol-first (204-206), working references and private registries, Hub as one service |
 | Human view | Rejected decorative/cluttered mockups | Simple restrained UI, Search Prompt, human/agent/evaluation views; machine API primary |
+| Capacity/admission | Latest follow-up | Per-capability declarations and runtime load; Hub helps choose, provider performs final admission; Core 0.1.1 adds the family |
 | Reputation | Explicit user interest; earlier assistant called it Core | Final suite stages full reputation in v0.2; preserve v0.1 receipts as foundation |
 | Sessions | Detailed extension titled v0.1 (203) | Preserve design; family ships in overall v0.2 per final suite |
 | Privacy/security | Some older rollout postponed privacy | Final plan/suite put policy/security in Core v0.1 |

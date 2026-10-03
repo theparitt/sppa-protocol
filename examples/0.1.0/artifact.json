@@ -1,0 +1,12 @@
+{
+  "ref": "artifact://com.example.ffmpeg/art_example01",
+  "provider_id": "com.example.ffmpeg",
+  "artifact_id": "art_example01",
+  "owner": "agent://example",
+  "media_type": "video/mp4",
+  "size_bytes": 1024,
+  "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "privacy": "private",
+  "created_at": "2026-10-03T05:00:00Z",
+  "retention_until": "2026-10-03T06:00:00Z"
+}

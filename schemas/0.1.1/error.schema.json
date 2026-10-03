@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/error.schema.json",
+  "title": "SPPA error (Draft 0.1.1)",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "invalid_request",
+        "unsupported_version",
+        "unsupported_operation",
+        "unauthenticated",
+        "forbidden",
+        "not_found",
+        "constraint_violation",
+        "policy_violation",
+        "provider_unavailable",
+        "idempotency_conflict",
+        "state_conflict",
+        "integrity_mismatch",
+        "transfer_expired",
+        "rate_limited",
+        "deadline_exceeded",
+        "execution_failed",
+        "internal_error",
+        "queue_full",
+        "capacity_exhausted",
+        "retry_exhausted"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "details": {
+      "type": "object"
+    },
+    "suggested_action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "retry_after_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "code",
+    "message",
+    "retryable"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,13 @@
+{
+  "privacy": "private",
+  "execution_location": "remote",
+  "data_region": "unspecified",
+  "training_use": false,
+  "max_retention_seconds": 3600,
+  "allow_content_logging": false,
+  "granted_permissions": [
+    "artifact.read",
+    "artifact.write"
+  ],
+  "human_approval": "not_required"
+}

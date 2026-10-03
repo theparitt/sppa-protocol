@@ -7,21 +7,21 @@ capabilities such as `video.transcode`; the caller discovers its contract,
 checks hard constraints and policy, transfers artifacts, invokes work and
 verifies execution evidence. A provider does not need to contain AI.
 
-**SPPA Core 0.1.0 is a working draft**, not a ratified standard or production
+**SPPA Core 0.1.1 is a working draft**, not a ratified standard or production
 certification. Direct providers and private registries work without public Hub.
 SPPA Hub is a separate reference service in the sibling `sppahub` repository.
 
 - [Public specification website](https://theparitt.github.io/sppa-protocol/)
-- [Specification source](spec/0.1.0/overview.md)
-- [Schemas](schemas/0.1.0/) and [OpenAPI binding](openapi/0.1.0.json)
+- [Specification source](spec/0.1.1/overview.md)
+- [Schemas](schemas/0.1.1/) and [OpenAPI binding](openapi/0.1.1.json)
 - [Weakness review and design decisions](docs/open-decisions.md)
-- [Conformance and implementation limits](spec/0.1.0/conformance.md)
+- [Conformance and implementation limits](spec/0.1.1/conformance.md)
 
 ## What is implemented
 
 Core covers discovery, capabilities, constraints, jobs, artifacts, transfer,
-policy, security, monitoring, errors, receipts and versioning. This repository
-contains 16 JSON Schema 2020-12 contracts, typed examples, JavaScript validators
+policy, security, monitoring, errors, receipts, versioning and Capacity/Admission. This repository
+contains 18 JSON Schema 2020-12 contracts, typed examples, JavaScript validators
 and HTTP client, a loopback FFmpeg provider, behavioral tests and a public static
 documentation site with search and an offline schema bundle.
 
@@ -29,6 +29,17 @@ Jobs have explicit terminal states, caller-scoped idempotency and retry lineage.
 Artifacts have opaque ownership-bound identities and verified sizes/hashes.
 Policy is enforced before execution. Receipts use Ed25519 and RFC 8785
 canonicalization, with pinned keys and expected execution context.
+
+## Capacity and admission update
+
+Each capability declares its own concurrency, FIFO queue, rolling caller rate,
+timeout and retry budget. Health exposes fresh capability load independently of
+operational status. Busy providers can queue work; queue/rate errors carry typed
+backpressure and optional millisecond retry hints. Root lineage budgets prevent
+branching retries from resetting attempt limits.
+
+[Capacity and Admission](spec/0.1.1/admission.md) is part of the new exact 0.1.1
+wire version. Original [0.1.0 resources](https://theparitt.github.io/sppa-protocol/spec/0.1.0/overview/) remain archived.
 
 ## Run in WSL
 
@@ -71,7 +82,7 @@ credentials, dependencies and generated browser artifacts are excluded from Git.
 
 Sessions/revisions, evaluation, feedback and reputation are planned for 0.2;
 streaming, composition, payment and advanced transfers for 0.3. They are not
-advertised as implemented Core capabilities. See [governance](spec/0.1.0/governance.md).
+advertised as implemented Core capabilities. See [governance](spec/0.1.1/governance.md).
 
 Code and authored specification are licensed under [Apache-2.0](LICENSE).
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for proposals and [SECURITY.md](SECURITY.md)

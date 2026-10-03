@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/constraints.schema.json",
+  "title": "SPPA constraints (Draft 0.1.1)",
+  "type": "object",
+  "properties": {
+    "max_input_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "input_media_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "output_media_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "privacy_levels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "public",
+          "private",
+          "confidential",
+          "local_only"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "execution_locations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "local",
+          "private_network",
+          "remote"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "data_regions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "training_use": {
+      "type": "boolean"
+    },
+    "retention_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "content_logging": {
+      "type": "boolean"
+    },
+    "required_permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "human_approval_required": {
+      "type": "boolean"
+    },
+    "max_output_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "max_input_bytes",
+    "input_media_types",
+    "output_media_types",
+    "privacy_levels",
+    "execution_locations",
+    "data_regions",
+    "training_use",
+    "retention_seconds",
+    "content_logging",
+    "required_permissions",
+    "human_approval_required"
+  ],
+  "additionalProperties": false
+}

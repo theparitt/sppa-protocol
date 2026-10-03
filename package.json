@@ -1,6 +1,6 @@
 {
   "name": "sppa-protocol",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "SPPA Core draft specification, schemas, conformance and public standards website",

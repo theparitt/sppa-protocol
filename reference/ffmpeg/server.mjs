@@ -6,19 +6,23 @@ import { spawn } from 'node:child_process';
 import { generateKeyPairSync, randomUUID } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { validate, parseJSON, envelope, sha256, canonicalHash, checkEligibility, validateParameters, transition, signDocument, ProtocolError, parseArtifact } from '../../src/core.mjs';
+import { AdmissionGate } from '../../src/admission.mjs';
 
-const capability = JSON.parse(await readFile(new URL('./capability.json', import.meta.url), 'utf8'));
+const defaultCapability = JSON.parse(await readFile(new URL('./capability.json', import.meta.url), 'utf8'));
 const newId = prefix => prefix + '_' + randomUUID();
 const now = () => new Date().toISOString();
-const statusCodes = { unauthenticated: 401, forbidden: 403, not_found: 404, unsupported_version: 400, constraint_violation: 422, policy_violation: 422, provider_unavailable: 503, idempotency_conflict: 409, state_conflict: 409, integrity_mismatch: 422, transfer_expired: 410, rate_limited: 429, deadline_exceeded: 422, internal_error: 500 };
+const statusCodes = { queue_full: 429, capacity_exhausted: 429, retry_exhausted: 422, unauthenticated: 401, forbidden: 403, not_found: 404, unsupported_version: 400, constraint_violation: 422, policy_violation: 422, provider_unavailable: 503, idempotency_conflict: 409, state_conflict: 409, integrity_mismatch: 422, transfer_expired: 410, rate_limited: 429, deadline_exceeded: 422, internal_error: 500 };
 async function collect(req, limit) {
   const parts = []; let size = 0;
   for await (const part of req) { size += part.length; if (size > limit) throw new ProtocolError('constraint_violation', 'Body exceeds limit'); parts.push(part); }
   return Buffer.concat(parts);
 }
 
-export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {}) {
+export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg', execution = defaultCapability.execution } = {}) {
   if (!tokens || !Object.keys(tokens).length) throw new Error('An explicit token-to-caller map is required');
+  const capability = { ...defaultCapability, execution: structuredClone(execution) };
+  const gate = new AdmissionGate(capability.execution);
+  if (execution.max_concurrency > 2 || execution.queue.max_depth > 64 || execution.timeout_seconds > 60 || execution.retry.max_attempts > 3) throw new Error('Reference execution limits may only be lowered');
   const credentials = new Map(Object.entries(tokens));
   const directory = await mkdtemp(join(tmpdir(), 'sppa-ffmpeg-'));
   const { privateKey, publicKey } = generateKeyPairSync('ed25519');
@@ -31,8 +35,9 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
     }
     for (const [id, t] of transfers) if (Date.parse(t.expires_at) <= Date.now() && !t.committing) { delete t.bytes; transfers.delete(id); }
   }, 250); cleanup.unref();
-  const health = () => ({ provider_id: providerId, status: active < 2 ? 'healthy' : 'degraded', observed_at: now(), valid_until: new Date(Date.now() + 60000).toISOString(), queue_depth: queue.length, active_jobs: active, max_concurrency: 2, source: 'provider' });
-  const manifest = () => ({ sppa: '0.1.0', kind: 'provider', provider_id: providerId, name: 'FFmpeg reference SPPA', provider_version: '0.1.0', endpoint: url + '/v1', capabilities: [capability], profiles: ['core.http-artifact'], security: { authentication: ['bearer'], receipt_algorithm: 'Ed25519', canonicalization: 'RFC8785', keys_uri: url + '/v1/keys' } });
+  const queued = () => queue.filter(job => job.data.status === 'queued').length;
+  const health = () => ({ provider_id: providerId, status: 'healthy', observed_at: now(), valid_until: new Date(Date.now() + 60000).toISOString(), queue_depth: queued(), active_jobs: active, max_concurrency: execution.max_concurrency, source: 'provider', capabilities: [{ capability: capability.id, capability_version: capability.version, accepting_jobs: active < execution.max_concurrency || (execution.queue.enabled && queued() < execution.queue.max_depth), capacity: { max_concurrency: execution.max_concurrency, running: active, available: execution.max_concurrency - active }, queue: { depth: queued(), max_depth: execution.queue.max_depth } }] });
+  const manifest = () => ({ sppa: '0.1.1', kind: 'provider', provider_id: providerId, name: 'FFmpeg reference SPPA', provider_version: '0.1.1', endpoint: url + '/v1', capabilities: [capability], profiles: ['core.http-artifact'], security: { authentication: ['bearer'], receipt_algorithm: 'Ed25519', canonicalization: 'RFC8785', keys_uri: url + '/v1/keys' } });
   const own = (item, caller) => { if (!item || item.owner !== caller) throw new ProtocolError('not_found', 'Resource not found'); return item; };
   const getArtifact = (ref, caller) => {
     const parsed = parseArtifact(ref);
@@ -55,7 +60,7 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
     }
   }
   function drain() {
-    while (active < 2 && queue.length) {
+    while (active < execution.max_concurrency && queue.length) {
       const job = queue.shift(); if (job.data.status !== 'queued') continue;
       if (Date.now() >= job.deadline) { stop(job, 'expired'); continue; }
       execute(job);
@@ -80,7 +85,7 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
       validateParameters(capability.result_schema, result); validate('artifact', output);
       // Prepare all signed evidence before publishing the terminal job state.
       const receiptId = newId('receipt'), finishedAt = now();
-      const receipt = signDocument({ sppa: '0.1.0', receipt_id: receiptId, job_id: job.data.job_id, caller_id: job.owner, provider_id: providerId, capability: capability.id, capability_version: capability.version, parameters_sha256: canonicalHash(job.data.parameters), input: { artifact: source.ref, sha256: source.sha256 }, output: { artifact: output.ref, sha256: output.sha256 }, started_at: job.data.started_at, finished_at: finishedAt, status: 'completed' }, privateKey, keyId);
+      const receipt = signDocument({ sppa: '0.1.1', receipt_id: receiptId, job_id: job.data.job_id, caller_id: job.owner, provider_id: providerId, capability: capability.id, capability_version: capability.version, parameters_sha256: canonicalHash(job.data.parameters), input: { artifact: source.ref, sha256: source.sha256 }, output: { artifact: output.ref, sha256: output.sha256 }, started_at: job.data.started_at, finished_at: finishedAt, status: 'completed' }, privateKey, keyId);
       validate('receipt', receipt);
       // No await after this recheck: cancellation/expiry cannot race the commit.
       if (job.data.status !== 'running' || Date.now() >= job.deadline) { stop(job, 'expired'); await rm(outputFile, { force: true }); return; }
@@ -101,7 +106,7 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
       if (existing.hash !== digest) throw new ProtocolError('idempotency_conflict', 'Idempotency key was reused with different content');
       return existing.job.data;
     }
-    if (dedup.size >= 1024 || jobs.size >= 1024 || queue.length >= 64) throw new ProtocolError('rate_limited', 'Reference provider capacity reached', {}, true);
+    if (dedup.size >= 1024 || jobs.size >= 1024) throw new ProtocolError('rate_limited', 'Reference provider capacity reached', {}, true);
     const payload = retryOf ? { ...retryOf.data, deadline: request.payload.deadline } : request.payload;
     if (payload.capability !== capability.id || payload.capability_version !== capability.version) throw new ProtocolError('constraint_violation', 'Unsupported capability/version');
     validateParameters(capability.parameters_schema, payload.parameters);
@@ -110,12 +115,17 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
     const match = checkEligibility(capability, metadata(input), payload.policy, health());
     if (!match.eligible) throw new ProtocolError('constraint_violation', 'Provider is ineligible', { reasons: match.reasons });
     const deadline = Date.parse(payload.deadline);
-    if (!(deadline > Date.now() && deadline <= Date.now() + 60000)) throw new ProtocolError('constraint_violation', 'Deadline must be within the next 60 seconds');
-    const data = { job_id: newId('job'), provider_id: providerId, caller_id: caller, capability: capability.id, capability_version: capability.version, input: payload.input, parameters: payload.parameters, policy: payload.policy, created_at: now(), deadline: payload.deadline, status: 'queued', progress: 0 };
+    if (!(deadline > Date.now() && deadline <= Date.now() + execution.timeout_seconds * 1000)) throw new ProtocolError('constraint_violation', 'Deadline exceeds the capability timeout');
+    const attempt = retryOf ? retryOf.lineage.attempts + 1 : 1;
+    gate.admit({ caller, running: active, queued: queued(), attempt });
+    const jobId = newId('job');
+    const lineage = retryOf?.lineage ?? { rootId: jobId, attempts: 0 };
+    lineage.attempts = attempt;
+    const data = { job_id: jobId, attempt, root_job_id: lineage.rootId, provider_id: providerId, caller_id: caller, capability: capability.id, capability_version: capability.version, input: payload.input, parameters: payload.parameters, policy: payload.policy, created_at: now(), deadline: payload.deadline, status: 'queued', progress: 0 };
     if (retryOf) data.retry_of = retryOf.data.job_id;
-    const job = { owner: caller, data, deadline };
+    const job = { owner: caller, data, deadline, lineage };
     job.timer = setTimeout(() => stop(job, 'expired'), deadline - Date.now());
-    jobs.set(data.job_id, job); dedup.set(scope, { hash: digest, job, until: Date.now() + 86400000 }); queue.push(job); setImmediate(drain);
+    jobs.set(data.job_id, job); dedup.set(scope, { hash: digest, job, until: Date.now() + 86400000 }); queue.push(job); drain();
     return data;
   }
   const routes = { '/v1/jobs': 'job.create', '/v1/jobs/get': 'job.get', '/v1/jobs/cancel': 'job.cancel', '/v1/jobs/retry': 'job.retry', '/v1/artifacts/get': 'artifact.get', '/v1/transfers/uploads': 'transfer.prepare_upload', '/v1/transfers/downloads': 'transfer.prepare_download', '/v1/transfers/complete': 'transfer.complete', '/v1/transfers/abort': 'transfer.abort', '/v1/health': 'health.get', '/v1/receipts/get': 'receipt.get' };
@@ -152,7 +162,7 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
       if (req.method !== 'POST' || !routes[pathname]) throw new ProtocolError('not_found', 'Resource not found');
       if (req.headers['content-type']?.split(';')[0] !== 'application/json') throw new ProtocolError('invalid_request', 'Use application/json');
       request = parseJSON(await collect(req, 1048576));
-      if (request.sppa !== '0.1.0') throw new ProtocolError('unsupported_version', 'SPPA 0.1.0 is required');
+      if (request.sppa !== '0.1.1') throw new ProtocolError('unsupported_version', 'SPPA 0.1.1 is required');
       validate('envelope', request);
       if (request.caller.id !== caller) throw new ProtocolError('forbidden', 'Caller does not match authenticated identity');
       if (request.type !== routes[pathname]) throw new ProtocolError('invalid_request', 'Operation does not match route');
@@ -203,6 +213,7 @@ export async function createProvider({ tokens, port = 0, ffmpeg = 'ffmpeg' } = {
     } catch (error) {
       const e = error instanceof ProtocolError ? error : new ProtocolError('internal_error', 'Provider internal error');
       const correlation = request && typeof request.request_id === 'string' && /^[a-z]+_[A-Za-z0-9_-]{8,64}$/.test(request.request_id) ? request.request_id : newId('req');
+      if (e.retryAfterMs !== undefined) res.setHeader('retry-after', String(Math.ceil(e.retryAfterMs / 1000)));
       json(statusCodes[e.code] ?? 400, envelope('error', e.toJSON(), authenticatedCaller ?? 'agent://anonymous', { request_id: correlation, provider_id: providerId }));
     }
   });

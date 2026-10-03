@@ -79,11 +79,11 @@ and downstream composition success, rather than just stars.
 
 | Release | Protocol families |
 | --- | --- |
-| Core v0.1 | Discovery; Capability; Constraints; Invocation/Job; Artifact; Transfer; Policy; Security; Monitoring; Error; Execution Receipt; Versioning |
+| Core v0.1 | Discovery; Capability; Constraints; Invocation/Job; Artifact; Transfer; Policy; Security; Monitoring; Error; Execution Receipt; Versioning; Capacity/Admission |
 | v0.2 | Session/Revision; Review; Validation; Evaluation; Feedback; Machine Reputation |
 | v0.3 | Streaming; Event/Subscription; Composition; Negotiation; Payment |
 
-The complete suite has 23 families plus the envelope. Master-plan interaction
+The original suite has 23 families plus the envelope. The subsequent Capacity/Admission addition brings the roadmap to 24 families, with 13 in Core. Master-plan interaction
 modes are request/response, async job, iterative session, streaming, subscription
 and interactive control. All are not mandatory Core modes; interactive control
 still lacks a detailed suite definition.
@@ -108,3 +108,13 @@ option for the future Hub; the protocol documentation uses GitHub Pages.
 
 Bleepwave may be an SPPA offering dispatch/routing/monitoring. RabbitMQ may
 implement that provider internally. Neither is a Hub core requirement.
+
+## Capacity and final admission
+
+The latest shared follow-up adds capacity to each capability contract. Providers
+own concurrency, queue, authenticated caller rate, end-to-end timeout and retry
+budgets; a Hub indexes declarations and fresh capability load. Caller AI can
+choose using available slots, queue depth and evidence-based wait estimates.
+The provider performs final atomic admission; a search result reserves no slot.
+Operational health and saturation are separate. Queueing can be available while
+all execution slots are occupied. Core 0.1.1 makes these semantics explicit.

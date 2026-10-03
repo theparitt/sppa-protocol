@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/capability.schema.json",
+  "title": "SPPA capability (Draft 0.1.1)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 128
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "parameters_schema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "object"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": true
+    },
+    "result_schema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "object"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": true
+    },
+    "constraints": {
+      "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/constraints.schema.json"
+    },
+    "interaction_modes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "request_response",
+          "async_job"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:\\.[a-z0-9_-]+)+$"
+      },
+      "additionalProperties": true
+    },
+    "execution": {
+      "$ref": "https://theparitt.github.io/sppa-protocol/schemas/0.1.1/execution.schema.json"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "name",
+    "description",
+    "features",
+    "parameters_schema",
+    "result_schema",
+    "constraints",
+    "interaction_modes",
+    "execution"
+  ],
+  "additionalProperties": false
+}
