@@ -46,7 +46,9 @@ Error payloads MUST NOT expose credentials, private paths or provider internals.
 
 ## JSON rules
 
-Control content type is `application/json`; schemas are `application/schema+json`.
+Control content type is `application/json`. Schema hosts SHOULD use
+`application/schema+json`; static hosts MAY use `application/json` with the
+explicit dialect and canonical identity in each schema resource.
 No unregistered custom content type is required. JSON is UTF-8, finite numbers,
 unique object member names, and well-formed Unicode. Integers MUST fit exactly
 within the IEEE-754 safe integer range. Clients MUST reject duplicate members
