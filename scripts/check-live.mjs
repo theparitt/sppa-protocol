@@ -10,7 +10,7 @@ async function check(path) {
    if (!response.ok) throw new Error(`HTTP ${response.status}`);
    const text = await response.text();
    if (path === '' && !text.includes('Software capabilities')) throw new Error('Old landing page still published');
-   if (path === 'design/architecture/' && !text.includes('Reuse MCP execution plumbing')) throw new Error('Architecture missing');
+   if (path === 'design/architecture/' && !text.includes('Transport-independent semantics')) throw new Error('Architecture missing');
    if (path.endsWith('.json')) {
     const value = JSON.parse(text);
     if (path === '.well-known/sppa.json' && (value.kind !== 'specification' || value.sppa !== '0.1.1')) throw new Error('Invalid specification catalog');

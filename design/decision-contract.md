@@ -4,8 +4,26 @@
 
 The contract starts with the caller's decision: **which provider can satisfy
 this goal under these hard requirements, and how do the eligible offers
-compare?** It defines meaning and evidence above MCP. It does not define a
-second invocation transport.
+compare?** Together with **Semantic Capability**, it forms the center of SPPA.
+It defines meaning and decision evidence independently of transport. Execution
+may use MCP, HTTP, or another declared binding; MCP is not required.
+
+## Decision data in seven groups
+
+| Group | Information the agent uses |
+| --- | --- |
+| Technical | Semantic capability/version, supported features, input/output meaning and limitations |
+| Operational | Online/offline status, queue, estimated wait/runtime/completion, capacity and freshness |
+| Quality | Scoped quality measurements, reliability, validation success and composition success |
+| Economic | Pricing unit/rate, estimated total cost, currency and enforceable spending limits |
+| Policy | Privacy, confidentiality, region, data residency, licensing and commercial-use rights |
+| Trust | Verified executions, evidence source, reputation, sample size and confidence |
+| Reuse | Whether an authorized compatible artifact exists, its freshness and reuse terms |
+
+These groups form the caller's **decision surface**. They describe the proposed
+contract, not metrics already collected by the reference provider. Required
+privacy and rights are hard gates; speed, cost, and quality are preferences only
+after the gates pass. The main AI makes the final choice.
 
 ## Four distinct objects
 
@@ -82,8 +100,10 @@ references. Estimates must declare their units, method, confidence, and source.
 A changed input, parameter, terms revision, or execution configuration requires
 re-evaluation. Selection reserves no capacity. The provider rechecks authority,
 terms, and atomic admission at execution time. The binding should carry an offer
-reference through MCP arguments/results and evidence, without replacing MCP's
-authentication or message envelope.
+reference through the chosen binding's arguments/results and evidence. MCP
+bindings use MCP authentication and messages; HTTP or other bindings declare
+their corresponding identity and correlation mechanisms. Offer semantics stay
+the same across bindings.
 
 ## Money is more than a rate
 
@@ -170,7 +190,8 @@ reference PNG and a depth-map PNG serve different roles.
 Composition checks semantic role, required features, schema/version, privacy,
 rights and destination authority at every step. Cross-provider use needs an
 explicit authorized transfer or access grant. The composition graph records
-dependencies and evidence; it does not bypass MCP calls or provider admission.
+dependencies and evidence; it does not bypass the chosen execution binding or
+provider admission.
 
 ## Acceptance gates for implementation
 
@@ -182,6 +203,7 @@ inputs/parameters; unauthorized reuse; expired artifacts; duplicate feedback;
 and saturation without health failure.
 
 Then demonstrate two independent providers implementing one semantic contract
-through MCP. Changing priority should reorder eligible offers without admitting
+and show the decision data surviving both HTTP and an MCP binding. Changing
+priority should reorder eligible offers without admitting
 an excluded candidate. The caller must make the final choice and the provider
 must recheck admission. This proposal does not claim those gates have passed.

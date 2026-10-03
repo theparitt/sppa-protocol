@@ -2,8 +2,10 @@
 
 Latest user-approved direction is in design/architecture.md and
 design/decision-contract.md. SPPA owns semantic capabilities, provider offers,
-hard eligibility and decision evidence. MCP owns connection/auth/calls/tasks;
-do not extend the earlier HTTP/RPC/job transport as the new architecture.
+hard eligibility and decision evidence. Semantic Capability + AI Decision
+Contract are the core pair, independent of transport. Execution may use MCP,
+HTTP or another declared binding; MCP is not a required dependency or the
+definition of SPPA. Reuse existing execution plumbing in each binding.
 Preserve its existing exact snapshots and runnable proof. Main AI selects;
 Hub returns candidates. Human-facing landing explains purpose before specs.
 Distinguish proposed lifecycle/contracts from implemented reference behavior.

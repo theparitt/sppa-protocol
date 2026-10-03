@@ -49,12 +49,16 @@ test('Provider comparison filters hard requirements before ordering preferences'
 test('Purpose precedes documents and the new architecture is separate from the proof',async({page})=>{
  await page.goto(root);
  await expect(page.locator('.agent-audience')).toContainText('AI agents to operate');
+ await expect(page.locator('.hero-definition')).toContainText('machine-first semantic capability and decision standard');
+ await expect(page.locator('.core-definition')).toHaveText('Semantic Capability + AI Decision Contract');
+ await expect(page.locator('#architecture')).toContainText('MCP / HTTP / other transport');
  await expect(page.locator('.lifecycle-list h3')).toHaveText(['Discover','Select','Run','Monitor','Evaluate','Rate','Compose']);
  await page.getByRole('link',{name:'Read the documents',exact:false}).click();
  await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Protocol Suite');
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Architecture',exact:true}).click();
- await expect(page.getByRole('heading',{level:1})).toContainText('capability decisions above MCP');
+ await expect(page.getByRole('heading',{level:1})).toContainText('the semantic decision layer');
  await expect(page.locator('main')).toContainText('They are not MCP bindings');
+ await expect(page.locator('main')).toContainText('Neither MCP nor a public Hub is required');
 });
 test('Every chapter renders without horizontal page overflow on narrow screens',async({page})=>{
  await page.setViewportSize({width:320,height:740});

@@ -1,14 +1,19 @@
 # SPPA Protocol Suite
 
-Software capabilities for AI. An open capability and decision layer for specialized software used by AI agents.
+Software capabilities for AI.
 
-**Latest design direction:** SPPA standardizes semantic capabilities and comparable
-provider offers; MCP handles connections, calls, authentication, and negotiated
-task support. Main AI makes the final provider choice. Start with
-[Architecture & MCP boundaries](design/architecture.md) and the
+**SPPA is a machine-first semantic capability and decision standard that gives
+AI agents normalized information to discover, compare, select, and compose
+software capabilities across providers.** This is the proposed standard's
+definition; SPPA remains a working draft.
+
+**Semantic Capability + AI Decision Contract** are the core pair. SPPA supplies
+decision data independently of transport. Execution can use MCP, HTTP, or another
+declared binding. Main AI makes the final provider choice. Start with
+[Architecture & execution bindings](design/architecture.md) and the
 [AI Decision Contract](design/decision-contract.md). These are design proposals,
 not a deployed MCP binding. The existing Core 0.1.1 HTTP reference below remains
-reproducible; new work should not expand its execution transport.
+reproducible; it does not yet implement the full decision standard.
 
 **Built for AI, end to end:** Discover → Select → Run → Monitor → Evaluate → Rate → Compose.
 AI agents operate the capabilities; humans supply intent and authority.

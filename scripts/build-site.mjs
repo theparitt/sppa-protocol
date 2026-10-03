@@ -47,8 +47,8 @@ for (const V of ['0.1.0','0.1.1']) {
 }
 await put('index.html',page('Software capabilities for AI',home(),'home'));
 await put('documents/index.html',page('SPPA Protocol Suite',documents(),'documents','documents/'));
-entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; new architecture uses MCP.'});
-for (const [slug,title] of [['architecture','Architecture & MCP boundaries'],['decision-contract','AI Decision Contract']]) {
+entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; semantic decision standard is transport independent.'});
+for (const [slug,title] of [['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract']]) {
  const text = await readFile(join(root,`design/${slug}.md`),'utf8');
  const renderer = new Renderer();
  const headings = [];
@@ -56,7 +56,7 @@ for (const [slug,title] of [['architecture','Architecture & MCP boundaries'],['d
  renderer.code = token => `<div class="code-block"><div class="code-label">${escape(token.lang||'EXAMPLE')}</div><button type="button" class="copy" aria-label="Copy code example">Copy</button><pre><code>${escape(token.text)}</code></pre></div>`;
  const html=marked.parse(text,{renderer}).replaceAll('<table>','<div class="table-wrap"><table>').replaceAll('</table>','</table></div>');
  const path=`design/${slug}/`;
- const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">Design direction / Proposed semantics above MCP</div><article class="prose">${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
+ const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">Design direction / Transport-independent semantic and decision contracts</div><article class="prose">${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
  await put(path+'index.html',page(title,body,'design',path));
  entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()});
 }

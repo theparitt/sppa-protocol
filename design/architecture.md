@@ -1,11 +1,30 @@
-# SPPA architecture: capability decisions above MCP
+# SPPA architecture: the semantic decision layer
 
 **Design direction · 2026-10-03 · Proposed, not an implemented wire release**
+
+**SPPA is a machine-first semantic capability and decision standard that gives
+AI agents normalized information to discover, compare, select, and compose
+software capabilities across providers.** This defines the proposed standard;
+it remains a working design, not a ratified standard.
 
 SPPA means **Specific Purpose Platform/App**: specialized software exposed as a
 capability that an AI agent can use. SPPA Protocol supplies the shared semantic
 and decision contracts. SPPA Hub is a separate reference discovery and comparison
-service. The main AI decides which provider to use.
+service. The main AI decides which provider to use. The standard is independent
+of MCP; execution can use MCP, HTTP, or another declared binding.
+
+## Two core contracts
+
+**Semantic Capability + AI Decision Contract** are the center of SPPA.
+
+A semantic capability states what result software can provide, with a versioned
+contract for input, output, features, parameters, and limitations. The AI Decision
+Contract supplies enough normalized context to decide which eligible provider to
+use for the current goal: technical fit, operations, quality, economics, policy,
+trust, and reuse. The caller's priorities determine the choice.
+
+SPPA does not only describe how to call software. It describes enough context
+for AI to decide whether it should call that software.
 
 Humans supply intent and receive outcomes. AI agents are the operational callers
 throughout the lifecycle. Human-facing pages explain and inspect the system; they
@@ -32,18 +51,38 @@ cross-provider composition are not implemented in the current reference.
 | Main AI | Supplies requirements, selects the provider, evaluates output, and plans subsequent steps |
 | SPPA protocol | Defines semantic capabilities, comparable offers, policies, evidence, and artifact meaning |
 | Hub or private registry | Discovers, filters, normalizes, and returns candidates with evidence and unknowns |
-| MCP | Provides negotiated connections, tool calls, authentication, task support, and notifications |
+| Execution binding | Maps the selected offer to calls, authenticated identity, task handling, and results using MCP, HTTP, or another transport |
 | Provider | Publishes truthful terms, enforces authorization and admission, runs software, returns results |
 
 A Hub may return dimensions or caller-requested ordering. It does not silently
 make the caller's final choice. Direct providers and private registries remain
 valid; a public Hub is not required.
 
-## Reuse MCP execution plumbing
+## Transport-independent semantics
 
-The new direction uses existing MCP facilities instead of specifying another
-RPC envelope, version-negotiation mechanism, OAuth replacement, progress
-transport, cancellation method, or asynchronous task protocol.
+The semantic and decision contracts are defined independently of execution
+plumbing. Neither MCP nor a public Hub is required to interpret a capability,
+compare offers, or apply eligibility rules. SPPA is not defined as "MCP plus
+more data" or as an MCP-only extension.
+
+The flow is human intent → main AI → capability discovery → provider offers →
+decision surface → main AI chooses → MCP / HTTP / other transport → provider →
+result. Direct provider discovery or a private registry can replace public Hub.
+
+Each execution binding declares its protocol and version, endpoint and tool or
+operation mapping, identity/authentication, authority propagation, offer and
+request correlation, task/result handling, and artifact transfer. It must preserve
+SPPA's capability version, hard policy requirements, terms, and evidence without
+silently translating them to weaker guarantees. Unsupported requirements fail
+explicitly. A transport that executes a job does not by itself implement the
+AI Decision Contract.
+
+Reuse existing connection and execution standards. SPPA's semantic core does
+not define a new universal RPC, OAuth system, or asynchronous task transport.
+The published HTTP reference is one existing binding experiment; an MCP binding
+is a planned option, not a prerequisite for the independent standard.
+
+## MCP as an execution binding
 
 [MCP tools](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)
 define structured tool invocation. The MCP
@@ -56,6 +95,10 @@ must pin a tested MCP version and declare task support instead of assuming it.
 The [MCP Registry](https://modelcontextprotocol.io/registry/about) already
 supports server discovery. SPPA adds capability semantics and a proposed
 cross-provider decision contract, rather than claiming that discovery is absent.
+
+**MCP helps AI use software. SPPA gives AI the information it needs to choose
+the right software.** This explains their different roles when used together;
+it does not make MCP a dependency of SPPA.
 
 Bulk artifact transfer can use authorized HTTPS/object-store mechanisms. MCP
 can carry descriptors; SPPA defines their identity, semantic role, lineage,
@@ -107,17 +150,21 @@ The reference does not distribute an FFmpeg binary or certify operator rights.
 
 Core 0.1.0 and 0.1.1 are published snapshots of an earlier HTTP experiment.
 Their schemas, envelope, job endpoints, and OpenAPI binding remain reproducible.
-They are not MCP bindings and are not retroactively declared to implement this
-design. New work follows the boundary above; do not extend the old transport
-to implement the decision layer.
+They are not MCP bindings and are not retroactively declared to implement the
+full decision standard. They remain valid HTTP reference experiments. New
+decision contracts are transport independent; a binding maps them to existing
+execution mechanisms without conflating decision semantics with transport.
 
 1. Review the [AI Decision Contract](../decision-contract/) first: hard
    requirements, offers, normalized dimensions, and evidence scope.
-2. Publish separate versioned semantic schemas and examples after review.
+2. Publish separate versioned semantic schemas and examples after review,
+   with Semantic Capability and AI Decision Contract as the core pair.
    Never insert new required fields into an existing exact wire version.
-3. Implement an MCP provider binding around the existing FFmpeg executor.
+3. Map the contracts to declared execution bindings. An MCP provider binding
+   around the existing FFmpeg executor is a planned demonstration option.
    Use MCP tools and negotiated Tasks; preserve admission and artifact checks.
-4. Prove caller interoperability with an actual MCP client, including
+4. Prove that the same semantic capability and decision requirements survive
+   execution through different bindings. For MCP, test an actual client,
    unsupported task capability, denied permissions, stale offers, and failures.
 5. Add independent provider comparison, evaluation, feedback, reputation, reuse,
    and composition in stages. Hub application code stays in `sppahub`.

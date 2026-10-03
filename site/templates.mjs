@@ -21,7 +21,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Software capabilities for AI. SPPA is an open capability and decision layer for AI agents, designed to work with MCP.">
+  <meta name="description" content="SPPA is a machine-first semantic capability and decision standard for AI agents to discover, compare, select and compose software capabilities across providers, independently of transport.">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="${escape(title)} · SPPA Protocol">
   <meta property="og:description" content="Start with the goal, not the app. Discover capabilities, compare providers and let AI choose.">
@@ -48,7 +48,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
     </div>
   </header>
   ${version === '0.1.0' ? `<div class="wrap note archive-note">Archived 0.1.0 draft. <a href="${B}spec/0.1.1/overview/">Read the current 0.1.1 draft</a>.</div>` : ''}
-  ${version === '0.1.1' && ['spec','schemas','conformance','documents'].includes(active) ? `<div class="wrap note archive-note">Published HTTP reference · Core 0.1.1. The <a href="${B}design/architecture/">new design direction uses MCP</a>; these resources remain available to reproduce the earlier proof.</div>` : ''}
+  ${version === '0.1.1' && ['spec','schemas','conformance','documents'].includes(active) ? `<div class="wrap note archive-note">Published HTTP reference · Core 0.1.1. The <a href="${B}design/architecture/">semantic decision standard is transport independent</a>; these resources remain available to reproduce the earlier proof.</div>` : ''}
   ${body}
   <footer class="footer">
     <div class="wrap footer-inner">
@@ -68,7 +68,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">New design direction</div><a href="${B}design/architecture/">SPPA & MCP boundaries</a><a href="${B}design/decision-contract/">AI Decision Contract</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">New design direction</div><a href="${B}design/architecture/">Architecture & execution bindings</a><a href="${B}design/decision-contract/">AI Decision Contract</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
   function documents() {
@@ -84,7 +84,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
             <dl class="publication-meta"><dt>Version</dt><dd>${version}</dd><dt>Status</dt><dd>Working draft</dd><dt>License</dt><dd><a href="${repository}/blob/main/LICENSE">Apache-2.0</a></dd></dl>
           </header>
           <h2 id="abstract">Abstract</h2>
-          <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> places capability meaning and provider decisions above MCP. The published Core ${version} below documents the earlier HTTP reference experiment; it is retained for reproducibility and is not an MCP implementation.</p>
+          <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> centers on Semantic Capability and AI Decision Contract, independently of execution transport. The published Core ${version} below documents the HTTP reference experiment; it is retained for reproducibility and does not yet implement the full decision standard.</p>
           <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
           <h2 id="contents">Contents</h2>
           <ol class="contents-list">${contents}</ol>

@@ -3,10 +3,13 @@
 ## Latest boundary and landing correction
 
 The 2026-10-03 follow-up supersedes the earlier execution-plumbing direction.
-SPPA is a capability and decision layer above MCP. Main AI supplies hard
+SPPA is an independent, machine-first semantic capability and decision standard.
+Semantic Capability + AI Decision Contract are its core pair. Main AI supplies hard
 requirements and priorities and chooses among comparable provider offers.
 Hub filters and returns a decision surface; it does not make the final choice.
-MCP supplies connection, authentication, calls, progress and negotiated Tasks.
+Execution uses MCP, HTTP or another declared binding. MCP supplies connection,
+authentication, calls, progress and negotiated Tasks when that binding is used;
+SPPA is not defined as an MCP extension or required to depend on MCP.
 See [architecture](../design/architecture.md) and
 [AI Decision Contract](../design/decision-contract.md).
 
@@ -29,7 +32,7 @@ earlier suggestions remain source history.
 | --- | --- |
 | SPPA | Specific Purpose Platform/App: the specialized app/service |
 | Capability | A high-level job offered by an SPPA, e.g. `video.transcode` |
-| SPPA Protocol | Shared caller/Hub/provider contracts |
+| SPPA Protocol | Independent semantic capability and decision contracts, with declared execution bindings |
 | SPPA Hub | Reference network for discovery, search, comparison, monitoring, trust and composition |
 
 SPPA need not contain AI. Traditional software and GPU/AI services are both
