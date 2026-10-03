@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises';
 const base = 'https://theparitt.github.io/sppa-protocol/';
 const chapters = (await readdir(new URL('../spec/0.1.1/', import.meta.url))).filter(f => f.endsWith('.md')).map(f => `spec/0.1.1/${f.slice(0,-3)}/`);
 const schemas = (await readdir(new URL('../schemas/0.1.1/', import.meta.url))).filter(f => f.endsWith('.json')).map(f => 'schemas/0.1.1/' + f);
-const paths = ['', 'documents/', 'design/architecture/', 'design/decision-contract/', ...chapters, 'schemas/', ...schemas, 'schemas/0.1.1/bundle.json', 'schemas/index.json', 'openapi/0.1.1.json', '.well-known/sppa.json', 'search-index.json', 'assets/style.css', 'assets/site.mjs', 'favicon.svg', 'sitemap.xml', 'spec/0.1.0/overview/', 'schemas/0.1.0/bundle.json', 'openapi/0.1.0.json'];
+const paths = ['', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', ...chapters, 'schemas/', ...schemas, 'schemas/0.1.1/bundle.json', 'schemas/index.json', 'openapi/0.1.1.json', '.well-known/sppa.json', 'search-index.json', 'assets/style.css', 'assets/site.mjs', 'favicon.svg', 'sitemap.xml', 'spec/0.1.0/overview/', 'schemas/0.1.0/bundle.json', 'openapi/0.1.0.json'];
 async function check(path) {
  for (let attempt = 0; attempt < 5; attempt++) {
   try {

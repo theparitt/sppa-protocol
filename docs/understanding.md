@@ -10,7 +10,8 @@ Hub filters and returns a decision surface; it does not make the final choice.
 Execution uses MCP, HTTP or another declared binding. MCP supplies connection,
 authentication, calls, progress and negotiated Tasks when that binding is used;
 SPPA is not defined as an MCP extension or required to depend on MCP.
-See [architecture](../design/architecture.md) and
+See the [foundational concept](../design/concept.md),
+[architecture](../design/architecture.md) and
 [AI Decision Contract](../design/decision-contract.md).
 
 The full AI lifecycle is Discover, Select, Run, Monitor, Evaluate, Rate, Compose.

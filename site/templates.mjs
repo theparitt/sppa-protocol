@@ -68,7 +68,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">New design direction</div><a href="${B}design/architecture/">Architecture & execution bindings</a><a href="${B}design/decision-contract/">AI Decision Contract</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">New design direction</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/">Architecture & execution bindings</a><a href="${B}design/decision-contract/">AI Decision Contract</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
   function documents() {
@@ -86,6 +86,8 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
           <h2 id="abstract">Abstract</h2>
           <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> centers on Semantic Capability and AI Decision Contract, independently of execution transport. The published Core ${version} below documents the HTTP reference experiment; it is retained for reproducibility and does not yet implement the full decision standard.</p>
           <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
+          <h2 id="concept-and-design">Concept and design direction</h2>
+          <p>Start with the <a href="${B}design/concept/">SPPA Concept</a> for purpose, the two core contracts, the AI lifecycle, and a provider-selection example. Continue with <a href="${B}design/architecture/">Architecture & execution bindings</a> and the <a href="${B}design/decision-contract/">AI Decision Contract</a> for detailed design requirements.</p>
           <h2 id="contents">Contents</h2>
           <ol class="contents-list">${contents}</ol>
           <h2 id="machine-contracts">Machine contracts</h2>
@@ -96,7 +98,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
           <p>Previous publication: <a href="${B}spec/0.1.0/overview/">Core 0.1.0</a>. Its versioned specification, schemas and API binding remain available.</p>
         </article>
       </main>
-      <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
+      <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#concept-and-design">Concept and design</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
     </div>`;
   }
   const home = () => landing(B, link, repository);

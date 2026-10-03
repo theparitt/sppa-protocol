@@ -48,7 +48,7 @@ for (const V of ['0.1.0','0.1.1']) {
 await put('index.html',page('Software capabilities for AI',home(),'home'));
 await put('documents/index.html',page('SPPA Protocol Suite',documents(),'documents','documents/'));
 entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; semantic decision standard is transport independent.'});
-for (const [slug,title] of [['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract']]) {
+for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract']]) {
  const text = await readFile(join(root,`design/${slug}.md`),'utf8');
  const renderer = new Renderer();
  const headings = [];
@@ -83,4 +83,4 @@ await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));
-console.log(`Built ${docs.length+5} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
+console.log(`Built ${docs.length+6} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);

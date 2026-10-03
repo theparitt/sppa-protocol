@@ -9,7 +9,8 @@ definition; SPPA remains a working draft.
 
 **Semantic Capability + AI Decision Contract** are the core pair. SPPA supplies
 decision data independently of transport. Execution can use MCP, HTTP, or another
-declared binding. Main AI makes the final provider choice. Start with
+declared binding. Main AI makes the final provider choice. Start with the
+[SPPA Concept](design/concept.md), then
 [Architecture & execution bindings](design/architecture.md) and the
 [AI Decision Contract](design/decision-contract.md). These are design proposals,
 not a deployed MCP binding. The existing Core 0.1.1 HTTP reference below remains

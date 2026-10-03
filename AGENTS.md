@@ -1,7 +1,8 @@
 # SPPA protocol working rules
 
-Latest user-approved direction is in design/architecture.md and
-design/decision-contract.md. SPPA owns semantic capabilities, provider offers,
+The foundational concept is in design/concept.md. Latest user-approved direction
+is in design/architecture.md and design/decision-contract.md.
+SPPA owns semantic capabilities, provider offers,
 hard eligibility and decision evidence. Semantic Capability + AI Decision
 Contract are the core pair, independent of transport. Execution may use MCP,
 HTTP or another declared binding; MCP is not a required dependency or the
