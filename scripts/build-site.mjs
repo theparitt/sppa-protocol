@@ -3,6 +3,7 @@ import { resolve, join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked, Renderer } from 'marked';
 import { templates, escape } from '../site/templates.mjs';
+import { createHash } from 'node:crypto';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const out = join(root, 'dist');
 if (resolve(dirname(out)) !== resolve(root) || basename(out) !== 'dist') throw new Error('Unsafe build output path');
@@ -22,14 +23,16 @@ const docs = [
  ['conformance','Conformance','Check shape, behavior and interoperability.'],
  ['governance','Status & governance','Draft process, contribution and staged roadmap.'],
 ];
-const { page, sidebar, home, link, repository, origin } = templates(B, docs);
+const assetSources = await Promise.all(['site/style.css', 'site/site.mjs'].map(path => readFile(join(root,path))));
+const assetVersion = createHash('sha256').update(Buffer.concat(assetSources)).digest('hex').slice(0,12);
+const { page, sidebar, home, link, repository, origin } = templates(B, docs, '0.1.1', assetVersion);
 await rm(out,{recursive:true,force:true}); await mkdir(out,{recursive:true});
 async function put(path, body) { const target=join(out,path); await mkdir(dirname(target),{recursive:true});await writeFile(target,body); }
 const entries=[],archivePaths=[];
 for (const V of ['0.1.0','0.1.1']) {
  const sourceNames = new Set(await readdir(join(root,`spec/${V}`)));
  const versionDocs = docs.filter(([slug])=>sourceNames.has(slug+'.md'));
- const { page, sidebar, link } = templates(B, versionDocs, V);
+ const { page, sidebar, link } = templates(B, versionDocs, V, assetVersion);
  for(const [i,[slug,title]] of versionDocs.entries()) {
  const text=await readFile(join(root,`spec/${V}/${slug}.md`),'utf8');
  const headings=[],seen=new Map(),renderer=new Renderer();
@@ -42,10 +45,10 @@ for (const V of ['0.1.0','0.1.1']) {
  if(V==='0.1.1') entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()}); else archivePaths.push(path);
  }
 }
-await put('index.html',page('Open contracts for specialized software',home(),'home'));
+await put('index.html',page('SPPA Protocol Suite',home(),'home'));
 const files=(await readdir(join(root,'schemas/0.1.1'))).filter(x=>x.endsWith('.json')).sort();
 const rows=files.map(file=>`<div class="schema-row"><div><strong>${escape(file)}</strong><small>JSON Schema 2020-12 · Draft 0.1.1</small></div><a href="${B}schemas/0.1.1/${file}" download>Download JSON ↓</a></div>`).join('');
-const schemaBody=`<div class="doc-layout">${sidebar('schemas')}<main class="doc-body" id="main"><div class="breadcrumb">Machine contracts / Core 0.1.1</div><span class="doc-status">WORKING DRAFT</span><article class="prose"><h1>Schemas & API</h1><p>Versioned contracts for validation and interoperability. Use the schemas with the normative chapters; a schema alone cannot prove authorization or execution semantics.</p><div class="actions"><a class="button primary" href="${B}schemas/0.1.1/bundle.json" download>Download schema bundle ↓</a><a class="button" href="${B}openapi/0.1.1.json" download>OpenAPI 3.1.1 ↓</a></div><div class="note">Draft snapshot: pin a repository commit during review. Later protocol families and advanced transfer profiles are not implemented.</div><h2>Core schemas</h2><div class="schema-list">${rows}</div><h2>Examples and discovery</h2><p><a href="${B}examples/manifest.json">Provider manifest</a> · <a href="${B}examples/job-create.json">Typed invocation</a> · <a href="${B}examples/artifact.json">Artifact metadata</a> · <a href="${B}.well-known/sppa.json">Specification catalog</a> · <a href="${B}schemas/index.json">Schema index</a></p><p>Previous draft: <a href="${B}spec/0.1.0/overview/">0.1.0 chapters</a> ? <a href="${B}schemas/0.1.0/bundle.json" download>0.1.0 schema bundle</a> ? <a href="${B}openapi/0.1.0.json" download>0.1.0 API binding</a></p><h2>Offline validation</h2><div class="code-block"><div class="code-label">SHELL</div><button type="button" class="copy" aria-label="Copy validation command">Copy</button><pre><code>npm ci\nnpm run validate -- manifest examples/manifest.json</code></pre></div><p>The validator loads local schemas. No remote fetch is needed. The bundle embeds schema resources with their canonical IDs.</p></article></main></div>`;
+const schemaBody=`<div class="doc-layout">${sidebar('schemas')}<main class="doc-body" id="main"><div class="breadcrumb">Machine contracts / Core 0.1.1</div><span class="doc-status">WORKING DRAFT</span><article class="prose"><h1>Schemas & API</h1><p>Versioned contracts for validation and interoperability. Use the schemas with the normative chapters; a schema alone cannot prove authorization or execution semantics.</p><div class="actions"><a class="button primary" href="${B}schemas/0.1.1/bundle.json" download>Download schema bundle ↓</a><a class="button" href="${B}openapi/0.1.1.json" download>OpenAPI 3.1.1 ↓</a></div><div class="note">Draft snapshot: pin a repository commit during review. Later protocol families and advanced transfer profiles are not implemented.</div><h2>Core schemas</h2><div class="schema-list">${rows}</div><h2>Examples and discovery</h2><p><a href="${B}examples/manifest.json">Provider manifest</a> · <a href="${B}examples/job-create.json">Typed invocation</a> · <a href="${B}examples/artifact.json">Artifact metadata</a> · <a href="${B}.well-known/sppa.json">Specification catalog</a> · <a href="${B}schemas/index.json">Schema index</a></p><p>Previous draft: <a href="${B}spec/0.1.0/overview/">0.1.0 chapters</a> &middot; <a href="${B}schemas/0.1.0/bundle.json" download>0.1.0 schema bundle</a> &middot; <a href="${B}openapi/0.1.0.json" download>0.1.0 API binding</a></p><h2>Offline validation</h2><div class="code-block"><div class="code-label">SHELL</div><button type="button" class="copy" aria-label="Copy validation command">Copy</button><pre><code>npm ci\nnpm run validate -- manifest examples/manifest.json</code></pre></div><p>The validator loads local schemas. No remote fetch is needed. The bundle embeds schema resources with their canonical IDs.</p></article></main></div>`;
 await put('schemas/index.html',page('Schemas & API',schemaBody,'schemas','schemas/'));
 entries.push({title:'Schemas & API',path:'schemas/',text:'Download JSON Schema 2020-12 bundle, OpenAPI 3.1.1, examples, manifest, artifact and protocol catalog.'});
 await cp(join(root,'schemas/0.1.0'),join(out,'schemas/0.1.0'),{recursive:true});
@@ -62,7 +65,7 @@ await cp(join(root,'openapi'),join(out,'openapi'),{recursive:true});await cp(joi
 await mkdir(join(out,'assets'));await cp(join(root,'site/style.css'),join(out,'assets/style.css'));await cp(join(root,'site/site.mjs'),join(out,'assets/site.mjs'));
 await put('.well-known/sppa.json',JSON.stringify({sppa:'0.1.1',kind:'specification',status:'working-draft',title:'SPPA Core',specification:origin+link('overview'),schemas:origin+B+'schemas/index.json',openapi:origin+B+'openapi/0.1.1.json',conformance:origin+link('conformance'),repository},null,2));
 await put('search-index.json',JSON.stringify(entries));
-await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#f2f6ed"/><path d="M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8z" fill="#17281e"/><path d="M18 18h6v6h-6z" fill="#3b9b6b"/></svg>');
+await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#fff"/><path d="M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z" fill="#333"/></svg>');
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));

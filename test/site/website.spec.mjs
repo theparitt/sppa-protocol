@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 const root='/sppa-protocol/';
-async function noOverflow(page){const state=await page.evaluate(()=>({width:window.innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>window.innerWidth).slice(0,8).map(e=>({tag:e.tagName,text:e.textContent.slice(0,100),parent:e.parentElement.className,display:getComputedStyle(e).display,whiteSpace:getComputedStyle(e).whiteSpace}))}));expect(state.scroll,JSON.stringify(state)).toBeLessThanOrEqual(state.width);}
+async function noOverflow(page){await page.waitForLoadState('load');const state=await page.evaluate(()=>({width:window.innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>window.innerWidth).slice(0,8).map(e=>({tag:e.tagName,text:e.textContent.slice(0,100),parent:e.parentElement.className,display:getComputedStyle(e).display,whiteSpace:getComputedStyle(e).whiteSpace}))}));expect(state.scroll,JSON.stringify(state)).toBeLessThanOrEqual(state.width);}
 test('Desktop reading layout, navigation and documentation search', async({page})=>{
  await page.setViewportSize({width:1440,height:1000});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto(root);
- await expect(page.getByRole('heading',{level:1})).toContainText('Specialized software.');
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Protocol Suite');
  await noOverflow(page);await mkdir('artifacts',{recursive:true});await page.screenshot({path:'artifacts/home-desktop.png',fullPage:false,animations:'disabled'});
  await page.getByRole('button',{name:'Search documentation'}).click();
  await page.getByRole('searchbox').fill('receipt');

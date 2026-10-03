@@ -1,30 +1,99 @@
-export const escape = x => String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-export function templates(B, docs, version = '0.1.1') {
+export const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+
+export function templates(B, docs, version = '0.1.1', assetVersion = '') {
+  const assetQuery = assetVersion ? `?v=${assetVersion}` : '';
   const repository = 'https://github.com/theparitt/sppa-protocol';
   const origin = 'https://theparitt.github.io';
   const link = slug => B + `spec/${version}/${slug}/`;
-  const nav = active => [['Overview',B,'home'],['Specification',link('overview'),'spec'],['Schemas',B+'schemas/','schemas'],['Conformance',link('conformance'),'conformance']].map(([label,url,id])=>`<a href="${url}" ${active===id?'aria-current="page"':''}>${label}</a>`).join('');
-  function page(title, body, active='spec', path='') {
-    return `<!doctype html><html lang="en" data-base="${B}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="SPPA Core draft: an open protocol for AI agents to discover, invoke and verify specialized software capabilities."><meta name="theme-color" content="#fafbf8"><meta property="og:title" content="${escape(title)} · SPPA Protocol"><meta property="og:description" content="Open contracts for specialized software. Read the working draft, schemas and conformance guide."><meta property="og:type" content="website"><meta property="og:url" content="${origin+B+path}"><title>${escape(title)} · SPPA Protocol</title><link rel="canonical" href="${origin+B+path}"><link rel="icon" href="${B}favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/json" href="${B}.well-known/sppa.json" title="SPPA specification catalog"><link rel="stylesheet" href="${B}assets/style.css"><script type="module" src="${B}assets/site.mjs"></script></head><body>
-    <a class="skip" href="#main">Skip to content</a><header class="header"><div class="topbar"><a class="brand" href="${B}" aria-label="SPPA Protocol home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>SPPA <small>Protocol</small></a><nav class="nav" id="main-navigation" aria-label="Main navigation">${nav(active)}</nav><div class="tools"><button type="button" class="search-open" aria-label="Search documentation">Search docs <kbd>/</kbd></button><a class="github-link" href="${repository}">GitHub ↗</a><button type="button" class="menu-button" aria-controls="main-navigation" aria-expanded="false">Menu</button></div></div></header>
-    ${version === '0.1.0' ? `<div class="wrap note">Archived 0.1.0 draft. <a href="${B}spec/0.1.1/overview/">Read the current 0.1.1 draft</a>.</div>` : ''}
-    ${body}
-    <footer class="footer"><div class="wrap footer-inner"><span><b>SPPA Protocol</b> · Specific Purpose Platform/App</span><div class="footer-links"><span>Draft ${version}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source ↗</a></div></div></footer>
-    <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation"><div class="search-bar"><input id="search-input" type="search" placeholder="Search the specification…" autocomplete="off" aria-label="Search the specification"><button type="button" class="search-close" aria-label="Close search">Esc</button></div><div class="search-results" id="search-results" aria-live="polite"></div><div class="search-footer">Local documentation search · No account required</div></dialog></body></html>`;
+  const nav = active => [
+    ['Documents', B, 'home'],
+    ['Specification', link('overview'), 'spec'],
+    ['Schemas', B + 'schemas/', 'schemas'],
+    ['Conformance', link('conformance'), 'conformance'],
+  ].map(([label, url, id]) => `<a href="${url}" ${active === id ? 'aria-current="page"' : ''}>${label}</a>`).join('');
+
+  function page(title, body, active = 'spec', path = '') {
+    return `<!doctype html>
+<html lang="en" data-base="${B}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="SPPA Core draft: an open protocol for AI agents to discover, invoke and verify specialized software capabilities.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="${escape(title)} · SPPA Protocol">
+  <meta property="og:description" content="The SPPA Protocol Suite: specification, machine contracts and implementation documents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${origin + B + path}">
+  <title>${escape(title)} · SPPA Protocol</title>
+  <link rel="canonical" href="${origin + B + path}">
+  <link rel="icon" href="${B}favicon.svg${assetQuery}" type="image/svg+xml">
+  <link rel="alternate" type="application/json" href="${B}.well-known/sppa.json" title="SPPA specification catalog">
+  <link rel="stylesheet" href="${B}assets/style.css${assetQuery}">
+  <script type="module" src="${B}assets/site.mjs${assetQuery}"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
+    <div class="topbar">
+      <a class="brand" href="${B}" aria-label="SPPA Protocol home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>SPPA <small>Protocol</small></a>
+      <nav class="nav" id="main-navigation" aria-label="Main navigation">${nav(active)}</nav>
+      <div class="tools">
+        <button type="button" class="search-open" aria-label="Search documentation">Search docs <kbd>/</kbd></button>
+        <a class="github-link" href="${repository}">GitHub</a>
+        <button type="button" class="menu-button" aria-controls="main-navigation" aria-expanded="false">Menu</button>
+      </div>
+    </div>
+  </header>
+  ${version === '0.1.0' ? `<div class="wrap note archive-note">Archived 0.1.0 draft. <a href="${B}spec/0.1.1/overview/">Read the current 0.1.1 draft</a>.</div>` : ''}
+  ${body}
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span><b>SPPA Protocol</b> · Specific Purpose Platform/App</span>
+      <div class="footer-links"><span>Draft ${version}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
+    </div>
+  </footer>
+  <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation">
+    <div class="search-bar"><input id="search-input" type="search" placeholder="Search the documents…" autocomplete="off" aria-label="Search the specification"><button type="button" class="search-close" aria-label="Close search">Esc</button></div>
+    <div class="search-results" id="search-results" aria-live="polite"></div>
+    <div class="search-footer">Search the published specification</div>
+  </dialog>
+</body>
+</html>`;
   }
+
   function sidebar(current) {
-    const group = items => items.map(([slug,title])=>`<a href="${link(slug)}" ${current===slug?'aria-current="page"':''}>${title}</a>`).join('');
-    return `<details open class="sidebar"><summary>IN THIS SPECIFICATION</summary><a href="${B}">Protocol home</a><div class="side-group">Core ${version}</div>${group(docs.slice(0,docs.findIndex(x=>x[0]==='quickstart')))}<div class="side-group">Implement & contribute</div>${group(docs.slice(docs.findIndex(x=>x[0]==='quickstart')))}<a href="${B}schemas/" ${current==='schemas'?'aria-current="page"':''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Repository ↗</a></details>`;
+    const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
+    const implementation = docs.findIndex(item => item[0] === 'quickstart');
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}" ${current === 'home' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
+
   function home() {
-    const snippet = JSON.stringify({ capability:'video.transcode',capability_version:'1.0.0',input:{artifact:'artifact://com.example.ffmpeg/art_12345678'},parameters:{codec:'h264',crf:24} },null,2);
-    const cards = ['discovery','policy','admission','jobs','artifacts','security'].map((slug,i)=>{const d=docs.find(x=>x[0]===slug);return `<a class="chapter-card" href="${link(slug)}"><span class="number">0${i+1} / CORE</span><span class="go" aria-hidden="true">↗</span><h3>${d[1]}</h3><p>${d[2]}</p></a>`}).join('');
-    const flow = [['01','Discover','Find a capability'],['02','Check','Policy & constraints'],['03','Transfer','Reference the input'],['04','Invoke','Provider executes'],['05','Verify','Artifact + receipt']].map(([n,t,s],i)=>`${i?'<span class="arrow" aria-hidden="true">→</span>':''}<div class="flow-node"><div class="num">${n}</div><strong>${t}</strong><small>${s}</small></div>`).join('');
-    return `<main id="main"><div class="wrap"><section class="hero"><div><div class="eyebrow"><span class="dot"></span>OPEN PROTOCOL · WORKING DRAFT</div><h1>Specialized software.<br><span>Shared contracts.</span></h1><p class="lede">A common language for AI agents to discover, invoke, and verify software capabilities. Built for providers that can run anywhere.</p><div class="actions"><a class="button primary" href="${link('overview')}">Read the specification <span>→</span></a><a class="button" href="${link('quickstart')}">Start building <span>↗</span></a></div><div class="meta"><span><b>${version}</b> working draft</span><span>Apache-2.0</span><span>Vendor-neutral</span></div></div><div class="code-card"><div class="code-top"><span>CAPABILITY INVOCATION</span><span>JSON / CORE 0.1</span></div><pre><code>${escape(snippet)}</code></pre><div class="bottom-note">Payload excerpt · Typed parameters, immutable artifacts</div></div></section>
-    <div class="strip"><div><strong>Software does the work.</strong>Providers choose their own runtime and infrastructure.</div><div><strong>Agents understand the contract.</strong>Capabilities declare inputs, outputs, and hard limits.</div><div><strong>Evidence travels with the result.</strong>Signed execution receipts bind identity and integrity.</div></div>
-    <section class="section"><div class="section-label"><div><h2>From intent to verified result.</h2><p>One shared contract. Independent implementations.</p></div><a href="${link('overview')}">Explore the model →</a></div><div class="flow">${flow}</div></section>
-    <section class="section" style="padding-top:0"><div class="section-label"><div><h2>The Core specification</h2><p>Normative rules, machine-readable schemas, and a working reference.</p></div><a href="${B}schemas/">Browse schemas →</a></div><div class="catalog">${cards}</div></section>
-    <div class="callout"><div><h2>Implement once. Participate anywhere.</h2><p>SPPA works with direct providers and private registries. SPPA Hub is a reference service, not a requirement. Start with the FFmpeg conformance example.</p></div><a class="button" href="${link('conformance')}">Check conformance <span>→</span></a></div></div></main>`;
+    const contents = docs.map(([slug, title, description], index) => `<li><a href="${link(slug)}"><span class="contents-number">${String(index + 1).padStart(2, '0')}.</span><span><strong>${escape(title)}</strong><span class="contents-description">${escape(description)}</span></span></a></li>`).join('');
+    return `<div class="doc-layout">
+      ${sidebar('home')}
+      <main class="doc-body publication" id="main">
+        <article class="prose">
+          <header class="publication-header">
+            <p class="publication-label">Protocol specification</p>
+            <h1>SPPA Protocol Suite</h1>
+            <p class="publication-subtitle">Core specification and supporting documents</p>
+            <dl class="publication-meta"><dt>Version</dt><dd>${version}</dd><dt>Status</dt><dd>Working draft</dd><dt>License</dt><dd><a href="${repository}/blob/main/LICENSE">Apache-2.0</a></dd></dl>
+          </header>
+          <h2 id="abstract">Abstract</h2>
+          <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. It describes how callers discover capabilities, apply constraints and policy, transfer artifacts, invoke jobs and verify execution evidence.</p>
+          <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
+          <h2 id="contents">Contents</h2>
+          <ol class="contents-list">${contents}</ol>
+          <h2 id="machine-contracts">Machine contracts</h2>
+          <p>Versioned resources accompany the specification. Read the normative chapters alongside the schemas and API binding.</p>
+          <ul class="resource-links"><li><a href="${B}schemas/">JSON schemas and API reference</a></li><li><a href="${B}schemas/${version}/bundle.json" download>Download the schema bundle</a></li><li><a href="${B}openapi/${version}.json" download>Download the OpenAPI binding</a></li><li><a href="${B}.well-known/sppa.json">Specification catalog</a></li></ul>
+          <h2 id="version-history">Versions and status</h2>
+          <p>Core ${version} is the current working draft. It is open for review; implementation limits and the contribution process are described in <a href="${link('conformance')}">Conformance</a> and <a href="${link('governance')}">Status & governance</a>.</p>
+          <p>Previous publication: <a href="${B}spec/0.1.0/overview/">Core 0.1.0</a>. Its versioned specification, schemas and API binding remain available.</p>
+        </article>
+      </main>
+      <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
+    </div>`;
   }
   return { page, sidebar, home, link, repository, origin };
 }

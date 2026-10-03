@@ -1,4 +1,5 @@
 const base = document.documentElement.dataset.base;
+document.querySelectorAll('.print-button').forEach(button => button.addEventListener('click', () => window.print()));
 const dialog = document.querySelector('#search-dialog');
 const input = document.querySelector('#search-input');
 const results = document.querySelector('#search-results');
