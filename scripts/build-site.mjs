@@ -57,7 +57,7 @@ for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architec
  const html=marked.parse(text,{renderer}).replaceAll('<table>','<div class="table-wrap"><table>').replaceAll('</table>','</table></div>');
  const path=`design/${slug}/`;
  const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">Design direction / Transport-independent semantic and decision contracts</div><article class="prose">${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
- await put(path+'index.html',page(title,body,'design',path));
+ await put(path+'index.html',page(title,body,slug==='concept'?'concept':'design',path));
  entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()});
 }
 const files=(await readdir(join(root,'schemas/0.1.1'))).filter(x=>x.endsWith('.json')).sort();

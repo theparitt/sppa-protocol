@@ -59,8 +59,14 @@ test('Purpose precedes documents and the new architecture is separate from the p
  await expect(page.getByRole('heading',{level:1})).toContainText('the semantic decision layer');
  await expect(page.locator('main')).toContainText('They are not MCP bindings');
  await expect(page.locator('main')).toContainText('Neither MCP nor a public Hub is required');
+ await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Concept',exact:true}).click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Concept');
+ await expect(page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Concept',exact:true})).toHaveAttribute('aria-current','page');
 });
 test('Every chapter renders without horizontal page overflow on narrow screens',async({page})=>{
+ for (const width of [1024,1100]) {
+  await page.setViewportSize({width,height:900});await page.goto(root);await noOverflow(page);
+ }
  await page.setViewportSize({width:320,height:740});
  for(const path of ['', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/']) {
   const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);

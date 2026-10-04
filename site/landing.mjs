@@ -7,7 +7,7 @@ export function landing(B, link, repository) {
     <p class="hero-detail">Humans give intent. AI chooses the capability. The provider does the specialized work.</p>
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
-    <div class="actions"><a class="button primary" href="#how-it-works">Understand SPPA <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
+    <div class="actions"><a class="button primary" href="${B}design/concept/">Read the concept <span aria-hidden="true">→</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
     <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent</p>
   </section>
 
@@ -40,6 +40,17 @@ export function landing(B, link, repository) {
 
   <section class="landing-section" id="decisions" aria-labelledby="decision-title">
     <div class="section-heading"><p class="eyebrow">03 / Why selection matters</p><h2 id="decision-title">Give AI enough information<br>to make a choice.</h2><p>Finding a tool is only the beginning. When several providers offer the same capability, the agent needs comparable terms and evidence to decide which fits this job.</p></div>
+    <h3>Seven groups of decision data.</h3>
+    <dl class="decision-data" aria-label="Decision data groups">
+      <div><dt>Technical</dt><dd>Capability, features, inputs, outputs, and limitations.</dd></div>
+      <div><dt>Operational</dt><dd>Health, queue, capacity, estimated wait and runtime.</dd></div>
+      <div><dt>Quality</dt><dd>Scoped quality, reliability, validation and composition success.</dd></div>
+      <div><dt>Economic</dt><dd>Pricing unit and rate, currency, estimated total cost.</dd></div>
+      <div><dt>Policy</dt><dd>Privacy, confidentiality, region, residency, license and commercial rights.</dd></div>
+      <div><dt>Trust</dt><dd>Verified runs, reputation, evidence source, sample size and confidence.</dd></div>
+      <div><dt>Reuse</dt><dd>Authorized existing artifacts, compatibility, freshness and reuse terms.</dd></div>
+    </dl>
+    <p class="caption decision-data-note">Proposed contract dimensions. An observation needs its scope, source, and freshness; missing data stays unknown. The working reference does not yet implement the full decision contract.</p>
     <div class="decision-demo" aria-labelledby="demo-title">
       <div class="demo-header"><div><h3 id="demo-title">Same capability. Different offers.</h3><p>Illustrative decision surface for <code>video.transcode</code></p></div><span class="example-label">Example data · no live providers</span></div>
       <form id="decision-controls" class="decision-controls">
