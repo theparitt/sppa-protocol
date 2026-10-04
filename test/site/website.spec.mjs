@@ -91,6 +91,11 @@ test('Featured capabilities open the complete catalog with honest implementation
 
 test('Eight groups retain hard eligibility, caller decision and a feedback loop',async({page})=>{
  await page.goto(root);
+ await expect(page.locator('#feature-groups .group-explanation dt')).toHaveText(Array.from({length:8},()=>['What it is','The problem before','Why it exists']).flat());
+ await expect(page.locator('#feature-groups svg')).toHaveCount(0);
+ const rows=await page.locator('.group-story').evaluateAll(items=>items.map(e=>({top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom})));
+ for(let i=1;i<rows.length;i++)expect(rows[i].top).toBeGreaterThanOrEqual(rows[i-1].bottom);
+ for(const picture of await page.locator('.group-illustration img').all()){await picture.scrollIntoViewIfNeeded();await expect.poll(()=>picture.evaluate(e=>e.naturalWidth)).toBeGreaterThan(0);}
  await expect(page.locator('#feature-groups .group-number')).toHaveText(['G1','G2','G3','G4','G5','G6','G7','G8']);
  await expect(page.locator('#feature-groups .group-feedback')).toContainText('Experience feeds the next decision');
  await expect(page.locator('#feature-groups .group-decision')).toContainText('A good review cannot override');

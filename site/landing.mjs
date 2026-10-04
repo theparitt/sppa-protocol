@@ -1,6 +1,5 @@
 import { comic } from './comic.mjs';
 import { structure } from './structure.mjs';
-import { featured } from './features.mjs';
 import { featureGroups } from './feature-groups.mjs';
 
 export function landing(B, link, repository) {
@@ -16,7 +15,7 @@ export function landing(B, link, repository) {
     <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#feature-groups">Eight feature groups &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
   </section>
 
-  ${featured(B)}
+  ${featureGroups(B)}
 
   ${comic()}
 
@@ -32,8 +31,6 @@ export function landing(B, link, repository) {
     <p class="setup-benefit">For a remote capability, the caller can work from its contract without installing the application or learning its command syntax. Providers still install and maintain their own software.</p>
     <p class="caption">Implemented example: <code>video.transcode</code>. Audio separation, 3D rendering, and document extraction are possible future capabilities, not services currently offered here.</p>
   </section>
-
-  ${featureGroups(B)}
 
   <section class="landing-section" id="lifecycle" aria-labelledby="lifecycle-title">
     <div class="section-heading"><p class="eyebrow">02 / The whole lifecycle</p><h2 id="lifecycle-title">Built for AI, end to end.</h2><p>From discovery to execution, monitoring, evaluation, reputation, and composition — the entire SPPA lifecycle is designed for AI agents.</p></div>

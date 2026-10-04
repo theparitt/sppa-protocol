@@ -81,7 +81,7 @@ await put('schemas/0.1.1/bundle.json',JSON.stringify(bundle,null,2));
 await put('schemas/index.json',JSON.stringify({sppa:'0.1.1',status:'working-draft',schemas:files.map(file=>({name:file,url:origin+B+'schemas/0.1.1/'+file})),bundle:origin+B+'schemas/0.1.1/bundle.json'},null,2));
 await cp(join(root,'schemas/runtime-status'),join(out,'schemas/runtime-status'),{recursive:true});
 await cp(join(root,'openapi'),join(out,'openapi'),{recursive:true});await cp(join(root,'examples'),join(out,'examples'),{recursive:true});
-await mkdir(join(out,'assets'));await cp(join(root,'site/style.css'),join(out,'assets/style.css'));await cp(join(root,'site/site.mjs'),join(out,'assets/site.mjs'));
+await mkdir(join(out,'assets'));await mkdir(join(out,'assets/illustrations'));for(const file of (await readdir(join(root,'site/illustrations'))).filter(file=>file.endsWith('.png')))await cp(join(root,'site/illustrations',file),join(out,'assets/illustrations',file));await cp(join(root,'site/style.css'),join(out,'assets/style.css'));await cp(join(root,'site/site.mjs'),join(out,'assets/site.mjs'));
 await put('.well-known/sppa.json',JSON.stringify({sppa:'0.1.1',kind:'specification',status:'working-draft',title:'SPPA Core',specification:origin+link('overview'),schemas:origin+B+'schemas/index.json',openapi:origin+B+'openapi/0.1.1.json',conformance:origin+link('conformance'),repository},null,2));
 await put('search-index.json',JSON.stringify(entries));
 await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#fff"/><path d="M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z" fill="#333"/></svg>');
