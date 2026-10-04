@@ -137,6 +137,6 @@ does not publish. Do not enable it merely because M2 passes.
 
 The Position Paper 0.1-draft.1 is authored in `docs/position-paper.md` and rendered
 for `/paper/` and `/paper/0.1-draft.1/`. `/why/` is the shorter entry before spec.
-Proposed domain roles: `sppahub.org` for the standards/paper site, `sppahub.com`
-for the agent service. Routes are prepared; purchase/activation/publication are
-not performed. The Hub remote proof is functional evidence, not M0–M2 completion.
+The owner selected `sppahub.org` for the Hub, superseding the earlier `.com`
+service proposal. Paper/spec routes may share the origin. Routes are prepared;
+DNS/hosting activation and publication are not performed. The Hub remote proof is functional evidence, not M0–M2 completion.

@@ -32,10 +32,9 @@ Validation + evidence -> evaluation -> future decisions
 
 ## Domain roles
 
-- `sppahub.org`: proposed home for Why, Position Paper, specification, architecture and evidence.
-- `sppahub.com`: proposed reference service with one-address agent onboarding.
+The owner selected `sppahub.org` for the Hub on 2026-10-05. The same origin can host the agent-service entry and the prepared `/why`, `/paper`, `/spec`, `/architecture`, `/examples` and `/conformance` routes. Protocol and service remain separate repositories and architectural roles.
 
-These domain roles are prepared in source. Public hosting is paused; neither role is claimed as deployed by this site.
+DNS, HTTPS and combined service/document routing are not activated here. Hosting remains private; these routes are not claimed as deployed at the domain.
 
 ## Agent-first operation
 

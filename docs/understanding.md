@@ -65,8 +65,10 @@ communicated, while the provider chooses how and where work runs.
 
 The protocol must work with direct providers and private registries, without
 public Hub. Hub is a reference service, not the definition of SPPA itself.
-The conversation proposes separate `.org` specification/reference and `.com`
-hosted-service roles. No domain has been purchased or deployed here.
+The latest 2026-10-05 decision selects `sppahub.org` for the Hub, superseding
+the earlier `.com` service proposal. Paper/spec routes may share that origin;
+protocol and service remain separate repositories. DNS and hosting have not
+been activated here.
 
 Machine APIs are primary; human pages are secondary views for inspection,
 publication and docs. Discovery centers on capabilities and requirements,

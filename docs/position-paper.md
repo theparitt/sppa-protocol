@@ -170,7 +170,7 @@ Owned artifact -> validation + evidence -> evaluation -> next decision
 
 Hub supports discovery; it is not required to remain in the execution path. The current Hub also offers an explicit opt-in gateway. Direct provider execution is separately demonstrated.
 
-The proposed domain split is `sppahub.org` for the position paper, specification and evidence, and `sppahub.com` for the reference service. These are planned domain roles, not currently deployed public services.
+The owner selected `sppahub.org` for the Hub on 5 October 2026. The reference service entry and position paper, specification and evidence routes can share that origin while retaining separate repositories and responsibilities. DNS, HTTPS and combined routing have not been activated here; this is a planned origin, not a currently deployed public service.
 
 A short human prompt should be enough to locate the service. Agents then follow machine discovery for authentication, account, search and billing interfaces. Automation remains bounded by an owner's standing grant and spending limit. An agent cannot create payment authority by writing its own prompt or silently change a denied requirement. Account enrollment and billing are planned service work, not implemented protocol claims.
 
