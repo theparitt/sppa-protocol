@@ -1,5 +1,11 @@
 # SPPA Protocol Suite
 
+**Private development stage.** Public hosting is paused while development proceeds
+toward the two-provider M2 proof. See [private launch plan](docs/private-launch-plan.md)
+for acceptance gates, existing implementation gaps and publication controls. Listed
+public URLs describe the earlier publication and may now return 404. Private CI
+continues; Pages requires an explicitly enabled release switch and a public repo.
+
 Software capabilities for AI.
 
 **SPPA is a machine-first semantic capability and decision standard that gives

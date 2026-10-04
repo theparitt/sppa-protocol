@@ -1,5 +1,10 @@
 # SPPA protocol working rules
 
+Private development stage: follow docs/private-launch-plan.md. Continue local work
+and private validation toward M0–M2. Do not publish, enable Pages, change visibility
+or release artifacts until the owner explicitly requests it. Milestone completion
+does not authorize publication. Preserve the actual earlier disclosure history.
+
 The foundational concept is in design/concept.md. Latest user-approved direction
 is in design/architecture.md and design/decision-contract.md.
 SPPA owns semantic capabilities, provider offers,
