@@ -199,6 +199,64 @@ button, a, input, summary { outline-offset: 4px; }
 .document-links span { display: block; color: #777; font-size: 11px; }
 .document-links strong { display: block; margin-top: 8px; font-size: 15px; font-weight: 500; }
 .landing-next { padding-bottom: 76px; }
+.sppa-comic { margin: 0; }
+.comic-goal { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 22px; border: 1px solid #dedede; border-radius: 10px; margin-bottom: 24px; }
+.comic-goal p { margin: 5px 0 0; font-size: 17px; line-height: 1.65; }
+.comic-avatar { display: block; flex: 0 0 46px; width: 46px; color: #555; }
+.comic-avatar svg { display: block; width: 100%; height: 58px; }
+.comic-avatar-ai { color: #34475d; }
+.comic-avatar-sppa { color: #194f90; }
+.comic-speaker { display: block; font-size: 10px; color: #777; letter-spacing: .35px; }
+.comic-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.comic-panel { display: flex; flex-direction: column; min-width: 0; border: 1px solid #ddd; border-radius: 8px; padding: 24px; }
+.comic-panel-sppa { border-color: #b8c9dd; }
+.comic-panel > header { display: flex; align-items: start; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--rule); }
+.comic-panel-number { border: 1px solid #ccc; border-radius: 50%; width: 28px; height: 28px; flex-shrink: 0; text-align: center; color: #666; font: 12px/26px var(--mono); }
+.comic-panel-sppa .comic-panel-number { color: #194f90; border-color: #b8c9dd; }
+.comic-panel header h3 { font-size: 19px; margin: 0; }
+.comic-panel header p { font-size: 12px; color: #777; margin: 6px 0 0; }
+.comic-dialogue { display: flex; flex-direction: column; flex: 1; justify-content: space-between; list-style: none; padding: 0; margin: 24px 0 0; gap: 20px; }
+.comic-line { display: flex; align-items: start; gap: 14px; }
+.comic-speech { position: relative; flex: 1; min-width: 0; padding: 12px 14px; border: 1px solid #ddd; border-radius: 3px 14px 14px 14px; background: #fff; }
+.comic-speech::before { content: ''; position: absolute; left: -5px; top: 18px; width: 8px; height: 8px; transform: rotate(45deg); border-left: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #fff; }
+.comic-speech p { margin: 5px 0 0; font-size: 13px; line-height: 1.75; }
+.comic-avatar-sppa + .comic-speech { border-color: #b8c9dd; }
+.comic-avatar-sppa + .comic-speech::before { border-color: #b8c9dd; }
+.comic-tool-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.comic-tool-tags code { color: #666; font-size: 10px; padding: 3px 6px; border: 1px solid #e6e6e6; border-radius: 3px; }
+.comic-offers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.comic-offers > div { border-top: 1px solid #ddd; padding-top: 8px; min-width: 0; }
+.comic-offers strong, .comic-offers span, .comic-offers small { display: block; }
+.comic-offers strong { font-size: 11px; font-weight: 600; }
+.comic-offers span { font-size: 10px; color: #666; margin-top: 3px; }
+.comic-offers small { font-size: 10px; color: #666; margin-top: 7px; }
+.comic-offers > div:last-child small { color: #194f90; }
+.comic-panel .comic-takeaway { margin: 24px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); color: #555; font-size: 12px; }
+.comic-panel-sppa .comic-takeaway { color: #194f90; }
+.comic-result { padding: 20px 0 0; text-align: center; }
+.comic-result > span { display: block; color: #888; font-size: 24px; }
+.comic-result strong { font-size: 14px; font-weight: 500; }
+.sppa-comic figcaption { margin-top: 18px; color: #777; font-size: 11px; line-height: 1.85; max-width: 800px; }
+.comic-independent { font-size: 14px; color: #555; }
+@media (max-width: 800px) {
+  .comic-panels { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .comic-goal { padding: 16px; gap: 12px; }
+  .comic-goal p { font-size: 14px; }
+  .comic-panel { padding: 18px 14px; }
+  .comic-line { gap: 10px; }
+  .comic-avatar { flex-basis: 36px; width: 36px; }
+  .comic-avatar svg { height: 48px; }
+  .comic-speech { padding: 10px 12px; }
+  .comic-speech p { font-size: 12px; }
+  .comic-offers { grid-template-columns: 1fr; gap: 12px; }
+}
+@media print {
+  .comic-panels { grid-template-columns: 1fr; }
+  .comic-panel { break-inside: avoid; margin-bottom: 16px; }
+  .comic-goal { break-inside: avoid; }
+}
 @media (max-width: 1000px) {
   .menu-button { display: block; }
   .nav { display: none; position: absolute; left: 0; right: 0; top: 72px; padding: 18px 28px; border-bottom: 1px solid var(--rule); background: #fff; flex-direction: column; align-items: flex-start; gap: 16px; }

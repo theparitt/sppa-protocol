@@ -1,3 +1,5 @@
+import { comic } from './comic.mjs';
+
 export function landing(B, link, repository) {
   return `<main id="main" class="landing">
   <section class="landing-hero" aria-labelledby="intro-title">
@@ -7,9 +9,11 @@ export function landing(B, link, repository) {
     <p class="hero-detail">Humans give intent. AI chooses the capability. The provider does the specialized work.</p>
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
-    <div class="actions"><a class="button primary" href="${B}design/concept/">Read the concept <span aria-hidden="true">→</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
+    <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
     <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent</p>
   </section>
+
+  ${comic()}
 
   <section class="landing-section" id="how-it-works" aria-labelledby="goal-title">
     <div class="section-heading"><p class="eyebrow">01 / The idea</p><h2 id="goal-title">Start with the goal,<br>not the app.</h2><p>Agents should spend their reasoning on the goal, rather than repeatedly installing, learning, and operating every piece of software needed to reach it.</p></div>
