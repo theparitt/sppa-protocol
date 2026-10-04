@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/runtime-status/0.1.0-draft.1/heartbeat.schema.json",
+  "title": "SPPA scoped heartbeat observation 0.1.0-draft.1",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "const": "runtime-status/0.1.0-draft.1"
+    },
+    "provider_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "observer_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "subject_kind": {
+      "type": "string",
+      "enum": [
+        "control_endpoint",
+        "capability_worker_pool",
+        "execution"
+      ]
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,3})?Z$"
+    },
+    "heartbeat_interval_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60000
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "provider_id",
+    "observer_id",
+    "subject_ref",
+    "subject_kind",
+    "observed_at",
+    "received_at",
+    "expires_at",
+    "heartbeat_interval_ms"
+  ]
+}

@@ -68,7 +68,7 @@ test('Every chapter renders without horizontal page overflow on narrow screens',
   await page.setViewportSize({width,height:900});await page.goto(root);await noOverflow(page);
  }
  await page.setViewportSize({width:320,height:740});
- for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/']) {
+ for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', 'design/runtime-status/']) {
   const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
  for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){

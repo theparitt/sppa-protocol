@@ -107,3 +107,5 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for proposals and [SECURITY.md](SECURITY
 for responsible reporting. Until a reviewed release is tagged, pin a commit.
 
 The public [feature catalog](https://theparitt.github.io/sppa-protocol/features/) groups the ecosystem into 16 categories with per-item reference/planned status and responsibility boundaries. Its curated overview lives in `site/features.mjs`; this catalog does not add wire contracts or change Core releases.
+
+Experimental [Runtime Status & Capacity](https://theparitt.github.io/sppa-protocol/design/runtime-status/) adds a separate snapshot/heartbeat profile, freshness and ordering checks, and an authorized Core health probe. Run npm run demo:runtime. Native heartbeat publishing, subscriptions and Hub integration remain future work; Core 0.1.1 is unchanged.

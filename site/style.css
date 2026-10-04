@@ -402,3 +402,6 @@ button, a, input, summary { outline-offset: 4px; }
 .feature-index a{align-items:center}.feature-index .feature-icon{width:36px;height:36px;flex-basis:36px;border-radius:7px;margin:0}.feature-index .feature-icon svg{width:26px;height:26px}.feature-index .feature-index-label{font-size:15px;color:var(--link);padding:0}
 .feature-group-title{display:flex;align-items:center;gap:18px;margin:16px 0}.feature-group-title .feature-icon{margin:0}.feature-group-title h2{margin:0;min-width:0}
 @media(max-width:600px){.feature-group-title{align-items:flex-start;gap:14px}.feature-group-title .feature-icon{width:44px;height:44px;flex-basis:44px}.feature-group-title .feature-icon svg{width:32px;height:32px}}
+
+.runtime-feature-callout{display:flex;gap:20px;border:1px solid var(--rule);padding:24px;margin-top:24px;border-radius:4px}.runtime-feature-callout .feature-icon{margin:0}.runtime-feature-callout h3{margin:0 0 8px}.runtime-feature-callout p{margin:0 0 12px;font-size:15px}.runtime-feature-callout .feature-status{display:block;margin-top:12px}.feature-badge.experimental{color:#72569b;background:#f2eff9;border-color:#ded6ed}
+@media(max-width:600px){.runtime-feature-callout{flex-direction:column;padding:20px}}

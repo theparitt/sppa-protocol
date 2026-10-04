@@ -48,10 +48,10 @@ for (const V of ['0.1.0','0.1.1']) {
 }
 await put('index.html',page('Software capabilities for AI',home(),'home'));
 await put('features/index.html',page('Protocol features',featureCatalog(B),'features','features/'));
-entries.push({title:'Protocol features',path:'features/',text:categories.map(g=>[g.title,g.owner,...g.items.map(x=>x.name+' '+x.description+' '+(x.reference?'Reference':'Planned'))].join(' ')).join(' ')});
+entries.push({title:'Protocol features',path:'features/',text:categories.map(g=>[g.title,g.owner,...g.items.map(x=>x.name+' '+x.description+' '+(x.reference?'Reference':x.experimental?'Experimental':'Planned'))].join(' ')).join(' ')});
 await put('documents/index.html',page('SPPA Protocol Suite',documents(),'documents','documents/'));
 entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; semantic decision standard is transport independent.'});
-for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract']]) {
+for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract'],['runtime-status','Runtime Status & Capacity']]) {
  const text = await readFile(join(root,`design/${slug}.md`),'utf8');
  const renderer = new Renderer();
  const headings = [];
@@ -78,6 +78,7 @@ const bundle={$schema:'https://json-schema.org/draft/2020-12/schema',$id:origin+
 for(const file of files)bundle.$defs[file.replace('.schema.json','')]=JSON.parse(await readFile(join(root,'schemas/0.1.1',file)));
 await put('schemas/0.1.1/bundle.json',JSON.stringify(bundle,null,2));
 await put('schemas/index.json',JSON.stringify({sppa:'0.1.1',status:'working-draft',schemas:files.map(file=>({name:file,url:origin+B+'schemas/0.1.1/'+file})),bundle:origin+B+'schemas/0.1.1/bundle.json'},null,2));
+await cp(join(root,'schemas/runtime-status'),join(out,'schemas/runtime-status'),{recursive:true});
 await cp(join(root,'openapi'),join(out,'openapi'),{recursive:true});await cp(join(root,'examples'),join(out,'examples'),{recursive:true});
 await mkdir(join(out,'assets'));await cp(join(root,'site/style.css'),join(out,'assets/style.css'));await cp(join(root,'site/site.mjs'),join(out,'assets/site.mjs'));
 await put('.well-known/sppa.json',JSON.stringify({sppa:'0.1.1',kind:'specification',status:'working-draft',title:'SPPA Core',specification:origin+link('overview'),schemas:origin+B+'schemas/index.json',openapi:origin+B+'openapi/0.1.1.json',conformance:origin+link('conformance'),repository},null,2));
@@ -86,4 +87,4 @@ await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));
-console.log(`Built ${docs.length+7} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
+console.log(`Built ${docs.length+8} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);

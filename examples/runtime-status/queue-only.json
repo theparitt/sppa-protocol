@@ -1,0 +1,34 @@
+{
+  "profile": "runtime-status/0.1.0-draft.1",
+  "provider_id": "com.example.ffmpeg",
+  "capability_ref": {
+    "id": "video.transcode",
+    "version": "1.0.0"
+  },
+  "scope": "provider_capability",
+  "publisher_id": "observer.example",
+  "publisher_epoch": "epoch-7",
+  "sequence": 1842,
+  "source": {
+    "kind": "observer_probe",
+    "id": "observer.example"
+  },
+  "observed_at": "2026-10-04T08:00:00Z",
+  "expires_at": "2026-10-04T08:00:15Z",
+  "received_at": "2026-10-04T08:00:00Z",
+  "reachability": "reachable",
+  "health": "healthy",
+  "admission_state": "queue_only",
+  "reason_codes": [
+    "execution_slots_full"
+  ],
+  "capacity": {
+    "max_concurrency": 2,
+    "running_jobs": 2,
+    "available_slots": 0,
+    "waiting_jobs": 7,
+    "max_waiting_jobs": 20,
+    "queue_enabled": true,
+    "queue_policy": "fifo"
+  }
+}

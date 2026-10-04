@@ -15,7 +15,8 @@
     "provider": "node reference/ffmpeg/server.mjs",
     "preview": "node scripts/preview.mjs",
     "validate": "node scripts/validate.mjs",
-    "test:site": "playwright test"
+    "test:site": "playwright test",
+    "demo:runtime": "node scripts/runtime-status-demo.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",
