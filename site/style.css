@@ -202,10 +202,8 @@ button, a, input, summary { outline-offset: 4px; }
 .sppa-comic { margin: 0; }
 .comic-goal { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 22px; border: 1px solid #dedede; border-radius: 10px; margin-bottom: 24px; }
 .comic-goal p { margin: 5px 0 0; font-size: 17px; line-height: 1.65; }
-.comic-avatar { display: block; flex: 0 0 46px; width: 46px; color: #555; }
-.comic-avatar svg { display: block; width: 100%; height: 58px; }
-.comic-avatar-ai { color: #34475d; }
-.comic-avatar-sppa { color: #194f90; }
+.comic-avatar { display: block; flex: 0 0 64px; width: 64px; }
+.comic-avatar svg { display: block; width: 100%; height: 64px; }
 .comic-speaker { display: block; font-size: 10px; color: #777; letter-spacing: .35px; }
 .comic-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .comic-panel { display: flex; flex-direction: column; min-width: 0; border: 1px solid #ddd; border-radius: 8px; padding: 24px; }
@@ -222,6 +220,9 @@ button, a, input, summary { outline-offset: 4px; }
 .comic-speech p { margin: 5px 0 0; font-size: 13px; line-height: 1.75; }
 .comic-avatar-sppa + .comic-speech { border-color: #b8c9dd; }
 .comic-avatar-sppa + .comic-speech::before { border-color: #b8c9dd; }
+.comic-avatar-ai + .comic-speech, .comic-avatar-ai + .comic-speech::before { background: #f6faff; }
+.comic-avatar-mcp + .comic-speech, .comic-avatar-mcp + .comic-speech::before { background: #faf7ff; }
+.comic-avatar-sppa + .comic-speech, .comic-avatar-sppa + .comic-speech::before { background: #f3fcf7; }
 .comic-tool-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .comic-tool-tags code { color: #666; font-size: 10px; padding: 3px 6px; border: 1px solid #e6e6e6; border-radius: 3px; }
 .comic-offers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
@@ -246,7 +247,7 @@ button, a, input, summary { outline-offset: 4px; }
   .comic-goal p { font-size: 14px; }
   .comic-panel { padding: 18px 14px; }
   .comic-line { gap: 10px; }
-  .comic-avatar { flex-basis: 36px; width: 36px; }
+  .comic-avatar { flex-basis: 48px; width: 48px; }
   .comic-avatar svg { height: 48px; }
   .comic-speech { padding: 10px 12px; }
   .comic-speech p { font-size: 12px; }

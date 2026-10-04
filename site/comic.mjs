@@ -1,17 +1,13 @@
-// Native SVG characters and HTML dialogue keep the illustration readable,
-// searchable, and responsive without baking text into an image.
-const avatar = kind => {
-  const drawings = {
-    human: '<path d="M16 27c0-14 32-14 32 0v9c0 12-8 19-16 19s-16-7-16-19z"/><path d="M16 29c4-2 8-7 10-12 5 7 12 10 22 11M10 70c0-11 10-17 22-17s22 6 22 17"/><path d="M24 43c5 4 11 4 16 0"/><circle cx="24" cy="34" r="1.5"/><circle cx="40" cy="34" r="1.5"/>',
-    ai: '<rect x="11" y="18" width="42" height="35" rx="10"/><path d="M32 18V9M7 29v12m50-12v12M20 53v7m24-7v7M13 70v-4c0-5 8-7 19-7s19 2 19 7v4"/><circle cx="32" cy="7" r="3"/><circle cx="23" cy="32" r="3"/><circle cx="41" cy="32" r="3"/><path d="M24 43c5 4 11 4 16 0"/>',
-    mcp: '<rect x="12" y="20" width="40" height="34" rx="9"/><path d="M22 20V9m20 11V9M32 54v10c0 4 4 6 10 6"/><circle cx="23" cy="33" r="2"/><circle cx="41" cy="33" r="2"/><path d="M24 43c5 4 11 4 16 0"/>',
-    sppa: '<rect x="12" y="15" width="40" height="45" rx="7"/><rect x="23" y="10" width="18" height="10" rx="3"/><circle cx="24" cy="32" r="2"/><circle cx="40" cy="32" r="2"/><path d="M24 41c5 4 11 4 16 0M21 51l4 4 8-8m5 5h6M20 60v10m24-10v10"/>',
-  };
-  return `<span class="comic-avatar comic-avatar-${kind}" aria-hidden="true"><svg viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false">${drawings[kind]}</svg></span>`;
-};
-const dialogue = (kind, name, text, extra = '') => `<li class="comic-line">${avatar(kind)}<div class="comic-speech"><span class="comic-speaker">${name}</span><p>${text}</p>${extra}</div></li>`;
-
+// Flat 2D faces; dialogue stays accessible HTML.
 export function comic() {
+  const faces = {
+    human: '<circle cx="32" cy="34" r="25" fill="#efc49f"/><path d="M7 31C5 12 17 5 32 5s27 10 25 28l-7-10c-11 2-19-1-26-7l-10 15z" fill="#584a40"/><circle cx="23" cy="34" r="2.5" fill="#333"/><circle cx="41" cy="34" r="2.5" fill="#333"/><path d="M24 45q8 5 16 0" fill="none" stroke="#584a40" stroke-width="2.5" stroke-linecap="round"/>',
+    ai: '<path d="M32 5v8" stroke="#55799e" stroke-width="3"/><circle cx="32" cy="5" r="4" fill="#55799e"/><rect x="1" y="26" width="8" height="19" rx="3" fill="#55799e"/><rect x="55" y="26" width="8" height="19" rx="3" fill="#55799e"/><rect x="7" y="13" width="50" height="44" rx="10" fill="#99bfdf"/><rect x="13" y="21" width="38" height="27" rx="7" fill="#364d63"/><circle cx="23" cy="31" r="3" fill="#fff"/><circle cx="41" cy="31" r="3" fill="#fff"/><path d="M25 40h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>',
+    mcp: '<path d="M22 6v14m20-14v14" stroke="#79688d" stroke-width="6" stroke-linecap="round"/><rect x="9" y="17" width="46" height="40" rx="10" fill="#b8a5cf"/><circle cx="23" cy="33" r="3" fill="#3e344a"/><circle cx="41" cy="33" r="3" fill="#3e344a"/><path d="M24 44q8 4 16 0" fill="none" stroke="#3e344a" stroke-width="2.5" stroke-linecap="round"/>',
+    sppa: '<rect x="9" y="8" width="46" height="50" rx="8" fill="#9fc6ae"/><path d="M17 8v50" stroke="#6d9980" stroke-width="5"/><circle cx="28" cy="29" r="3" fill="#344e3e"/><circle cx="43" cy="29" r="3" fill="#344e3e"/><path d="M29 41h12" stroke="#344e3e" stroke-width="2.5" stroke-linecap="round"/>',
+  };
+  const avatar = kind => `<span class="comic-avatar comic-avatar-${kind}" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false">${faces[kind]}</svg></span>`;
+  const dialogue = (kind, name, text, extra = '') => `<li class="comic-line">${avatar(kind)}<div class="comic-speech"><span class="comic-speaker">${name}</span><p>${text}</p>${extra}</div></li>`;
   return `<section class="landing-section comic-section" id="sppa-in-a-picture" aria-labelledby="comic-title">
     <div class="section-heading"><p class="eyebrow">An illustrated example</p><h2 id="comic-title">Same goal.<br>More context for the AI.</h2><p>MCP helps an agent discover and call tools. SPPA supplies standardized capability and provider information so the agent can compare offers before deciding.</p></div>
     <figure class="sppa-comic" aria-labelledby="comic-title" aria-describedby="comic-caption">
