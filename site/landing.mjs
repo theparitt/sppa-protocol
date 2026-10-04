@@ -1,4 +1,5 @@
 import { comic } from './comic.mjs';
+import { structure } from './structure.mjs';
 
 export function landing(B, link, repository) {
   return `<main id="main" class="landing">
@@ -10,7 +11,7 @@ export function landing(B, link, repository) {
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
     <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
-    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent</p>
+    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#structure">View the structure ↓</a></p>
   </section>
 
   ${comic()}
@@ -77,7 +78,7 @@ export function landing(B, link, repository) {
 
   <section class="landing-section" id="architecture" aria-labelledby="architecture-title">
     <div class="section-heading"><p class="eyebrow">04 / The boundary</p><h2 id="architecture-title">SPPA is the semantic<br>decision layer.</h2><p>SPPA supplies the context for choosing software across providers. Execution can use MCP, HTTP, or another transport. Its semantic and decision contracts do not depend on MCP.</p></div>
-    <div class="architecture-flow"><div><span class="flow-label">Main AI</span><strong>Sets requirements</strong><p>Goal, hard constraints, priorities</p></div><span aria-hidden="true">→</span><div><span class="flow-label">SPPA Hub / private registry</span><strong>Returns a decision surface</strong><p>Capability, offers, policy, evidence</p></div><span aria-hidden="true">→</span><div><span class="flow-label">Main AI</span><strong>Chooses the provider</strong><p>Final decision stays with the caller</p></div><span aria-hidden="true">→</span><div><span class="flow-label">Connection layer → provider</span><strong>Executes the work</strong><p>MCP / HTTP / other transport</p></div></div>
+    ${structure()}
     <div class="two-columns"><div><h3>SPPA owns the meaning and decision data.</h3><p>Semantic capabilities, provider offers, cost and timing comparisons, privacy and license rules, evidence, reputation, reuse, and artifact composition.</p></div><div><h3>The execution binding handles the connection.</h3><p>Calls, authentication, progress, and task handling follow the chosen binding. With MCP, use its existing facilities and negotiated task support. Other bindings preserve the same SPPA semantics.</p></div></div>
     <p class="connection-distinction">MCP helps AI use software. SPPA gives AI the information it needs to choose the right software.</p>
     <p class="caption">SPPA is independently defined, not an MCP-only extension. The working proof uses HTTP; an MCP binding is not implemented yet. MCP Tasks are experimental and must be negotiated when that binding is used. A public Hub is optional.</p>
