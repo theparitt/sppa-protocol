@@ -8,6 +8,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   const link = slug => B + `spec/${version}/${slug}/`;
   const nav = active => [
     ['About SPPA', B, 'home'],
+    ['Features', B + 'features/', 'features'],
     ['Concept', B + 'design/concept/', 'concept'],
     ['Architecture', B + 'design/architecture/', 'design'],
     ['Documents', B + 'documents/', 'documents'],
@@ -54,7 +55,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   <footer class="footer">
     <div class="wrap footer-inner">
       <span><b>SPPA Protocol</b> · Specific Purpose Platform/App</span>
-      <div class="footer-links"><span>${['design','concept'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
+      <div class="footer-links"><span>${['design','concept','features'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
     </div>
   </footer>
   <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation">
@@ -69,7 +70,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><a href="${B}features/">All protocol features</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
   function documents() {
@@ -87,6 +88,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
           <h2 id="abstract">Abstract</h2>
           <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> centers on Semantic Capability and AI Decision Contract, independently of execution transport. The published Core ${version} below documents the HTTP reference experiment; it is retained for reproducibility and does not yet implement the full decision standard.</p>
           <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
+          <p><a href="${B}features/">Browse all protocol features</a> for responsibilities, reference coverage and planned work across the ecosystem.</p>
           <h2 id="concept-and-design">Concept and design direction</h2>
           <p>Start with the <a href="${B}design/concept/">SPPA Concept</a> for purpose, the two core contracts, the AI lifecycle, and a provider-selection example. Continue with <a href="${B}design/architecture/">Architecture & execution bindings</a> and the <a href="${B}design/decision-contract/">AI Decision Contract</a> for detailed design requirements.</p>
           <h2 id="contents">Contents</h2>

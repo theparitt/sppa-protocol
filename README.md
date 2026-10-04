@@ -105,3 +105,5 @@ advertised as implemented Core capabilities. See [governance](spec/0.1.1/governa
 Code and authored specification are licensed under [Apache-2.0](LICENSE).
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for proposals and [SECURITY.md](SECURITY.md)
 for responsible reporting. Until a reviewed release is tagged, pin a commit.
+
+The public [feature catalog](https://theparitt.github.io/sppa-protocol/features/) groups the ecosystem into 16 categories with per-item reference/planned status and responsibility boundaries. Its curated overview lives in `site/features.mjs`; this catalog does not add wire contracts or change Core releases.

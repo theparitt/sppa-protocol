@@ -68,10 +68,23 @@ test('Every chapter renders without horizontal page overflow on narrow screens',
   await page.setViewportSize({width,height:900});await page.goto(root);await noOverflow(page);
  }
  await page.setViewportSize({width:320,height:740});
- for(const path of ['', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/']) {
+ for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/']) {
   const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
  for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){
   const response=await page.goto(`${root}spec/0.1.1/${chapter}/`);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
+});
+
+test('Featured capabilities open the complete catalog with honest implementation status',async({page})=>{
+ await page.goto(root);
+ await page.getByRole('link',{name:'Explore all features',exact:false}).click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('Protocol features.');
+ await page.getByRole('navigation',{name:'Feature categories'}).getByRole('link',{name:'Payments & settlement',exact:false}).click();
+ await expect(page.locator('#payment .feature-badge')).toHaveText(Array(6).fill('Planned'));
+ await expect(page.locator('#execution')).toContainText('Atomic admission');
+ await page.setViewportSize({width:390,height:844});await noOverflow(page);
+ await page.getByRole('button',{name:'Search documentation'}).click();
+ await page.getByRole('searchbox').fill('counteroffers');
+ await expect(page.locator('#search-results')).toContainText('Protocol features');
 });

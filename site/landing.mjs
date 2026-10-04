@@ -1,5 +1,6 @@
 import { comic } from './comic.mjs';
 import { structure } from './structure.mjs';
+import { featured } from './features.mjs';
 
 export function landing(B, link, repository) {
   return `<main id="main" class="landing">
@@ -11,8 +12,10 @@ export function landing(B, link, repository) {
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
     <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
-    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#structure">View the structure ↓</a></p>
+    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
   </section>
+
+  ${featured(B)}
 
   ${comic()}
 
