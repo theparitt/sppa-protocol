@@ -117,3 +117,14 @@ for responsible reporting. Until a reviewed release is tagged, pin a commit.
 The public [feature catalog](https://theparitt.github.io/sppa-protocol/features/) groups the ecosystem into 16 categories with per-item reference/planned status and responsibility boundaries. Its curated overview lives in `site/features.mjs`; this catalog does not add wire contracts or change Core releases.
 
 Experimental [Runtime Status & Capacity](https://theparitt.github.io/sppa-protocol/design/runtime-status/) adds a separate snapshot/heartbeat profile, freshness and ordering checks, and an authorized Core health probe. Run npm run demo:runtime. Native heartbeat publishing, subscriptions and Hub integration remain future work; Core 0.1.1 is unchanged.
+
+## Reusable artifact provider runtime
+
+`reference/provider/server.mjs` hosts the existing Core transfer, admission,
+job and receipt behavior with operator-supplied capability, identity and typed
+runtime hooks. The FFmpeg entry remains backward compatible;
+`reference/background/capability.json` describes a same-sized RGBA image result.
+No Core wire/schema version changes are introduced. The sibling Hub supplies
+SSH/Docker runtime adapters and the private remote-worker proof. Backend probe
+failures make admission unavailable; previously accepted idempotency replays
+remain available. Wrapper capacity does not measure the entire remote machine.

@@ -1,0 +1,96 @@
+{
+  "id": "image.remove_background",
+  "version": "1.0.0",
+  "name": "Remove image background",
+  "description": "Remove background using a pinned model and return a same-sized RGBA PNG.",
+  "features": [
+    "preserve_dimensions",
+    "alpha_output"
+  ],
+  "parameters_schema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+  },
+  "result_schema": {
+    "type": "object",
+    "properties": {
+      "media_type": {
+        "const": "image/png"
+      },
+      "size_bytes": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "height": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "alpha_channel": {
+        "const": true
+      }
+    },
+    "required": [
+      "media_type",
+      "size_bytes",
+      "width",
+      "height",
+      "alpha_channel"
+    ],
+    "additionalProperties": false
+  },
+  "constraints": {
+    "max_input_bytes": 8388608,
+    "input_media_types": [
+      "image/png",
+      "image/jpeg"
+    ],
+    "output_media_types": [
+      "image/png"
+    ],
+    "privacy_levels": [
+      "public",
+      "private"
+    ],
+    "execution_locations": [
+      "remote"
+    ],
+    "data_regions": [
+      "unspecified"
+    ],
+    "training_use": false,
+    "retention_seconds": 3600,
+    "content_logging": false,
+    "required_permissions": [
+      "artifact.read",
+      "artifact.write"
+    ],
+    "human_approval_required": false,
+    "max_output_bytes": 16777216
+  },
+  "interaction_modes": [
+    "async_job"
+  ],
+  "execution": {
+    "max_concurrency": 1,
+    "queue": {
+      "enabled": true,
+      "max_depth": 2,
+      "policy": "fifo"
+    },
+    "rate_limit": {
+      "requests": 120,
+      "window_seconds": 60,
+      "scope": "caller"
+    },
+    "timeout_seconds": 60,
+    "retry": {
+      "supported": true,
+      "max_attempts": 3
+    }
+  }
+}
