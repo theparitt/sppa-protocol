@@ -8,11 +8,11 @@ export function landing(B, link, repository) {
     <p class="eyebrow">SPPA · Specific Purpose Platform/App</p>
     <h1 id="intro-title">Software capabilities<br>for AI.</h1>
     <p class="hero-definition">SPPA is a machine-first semantic capability and decision standard that gives AI agents normalized information to discover, compare, select, and compose software capabilities across providers.</p>
-    <p class="hero-detail">Humans give intent. AI chooses the capability. The provider does the specialized work.</p>
+    <p class="hero-detail"><strong>Built for AI decisions, not just AI connections.</strong><br>Humans give intent. AI chooses the capability. The provider does the specialized work.</p>
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
-    <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
-    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#feature-groups">Eight feature groups &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
+    <div class="actions"><a class="button primary" href="${B}why/">Why SPPA? →</a><a class="button" href="${B}paper/">Read the Paper →</a><a class="button" href="${B}spec/">Specification →</a><a class="text-link" href="http://localhost:7772/">Try the local preview ↗</a></div>
+    <p class="landing-status">Proposed open standard · <a href="${B}documents/">Read the documents →</a> · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#feature-groups">Eight feature groups &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
   </section>
 
   ${featureGroups(B)}

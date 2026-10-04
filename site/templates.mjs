@@ -4,17 +4,20 @@ export const escape = value => String(value).replaceAll('&', '&amp;').replaceAll
 export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   const assetQuery = assetVersion ? `?v=${assetVersion}` : '';
   const repository = 'https://github.com/theparitt/sppa-protocol';
-  const origin = 'https://theparitt.github.io';
+  const origin = process.env.SITE_ORIGIN ?? 'https://theparitt.github.io';
+  const parsedOrigin = new URL(origin);
+  if (parsedOrigin.protocol !== 'https:' || parsedOrigin.origin !== origin) throw new Error('SITE_ORIGIN must be an HTTPS origin without a path');
   const link = slug => B + `spec/${version}/${slug}/`;
   const nav = active => [
     ['About SPPA', B, 'home'],
-    ['Features', B + 'features/', 'features'],
-    ['Concept', B + 'design/concept/', 'concept'],
-    ['Architecture', B + 'design/architecture/', 'design'],
-    ['Documents', B + 'documents/', 'documents'],
-    ['Specification', version==='0.1.1'?B+'spec/feature-groups/0.1.0-draft.1/':link('overview'), 'spec'],
+    ['Why SPPA?', B + 'why/', 'why'],
+    ['Paper', B + 'paper/', 'paper'],
+    ['Specification', version==='0.1.1'?B+'spec/':link('overview'), 'spec'],
+    ['Architecture', B + 'architecture/', 'design'],
+    ['Examples', B + 'examples/', 'examples'],
     ['Schemas', B + 'schemas/', 'schemas'],
-    ['Conformance', link('conformance'), 'conformance'],
+    ['Concept', B + 'design/concept/', 'concept'],
+    ['Documents', B + 'documents/', 'documents'],
   ].map(([label, url, id]) => `<a href="${url}" ${(active === id || ['layers','groups'].includes(active) && id === 'spec') ? 'aria-current="page"' : ''}>${label}</a>`).join('');
 
   function page(title, body, active = 'spec', path = '') {
@@ -55,7 +58,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   <footer class="footer">
     <div class="wrap footer-inner">
       <span><b>SPPA Protocol</b> · Specific Purpose Platform/App</span>
-      <div class="footer-links"><span>${['layers','groups'].includes(active) ? 'Proposed specification draft' : ['design','concept','features'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
+      <div class="footer-links"><span>${['layers','groups'].includes(active) ? 'Proposed specification draft' : ['design','concept','features','why','paper','examples','github'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
     </div>
   </footer>
   <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation">
@@ -70,7 +73,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><a href="${B}features/">All protocol features</a><div class="side-group">Protocol feature groups</div><a href="${B}spec/feature-groups/0.1.0-draft.1/" ${current === 'feature-groups' ? 'aria-current="page"' : ''}>Eight groups & Decision Record</a><a href="${B}spec/decision-layers/0.1.0-draft.1/" ${current === 'decision-layers' ? 'aria-current="page"' : ''}>Historical six-layer model</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><a href="${B}design/runtime-status/" ${current === 'runtime-status' ? 'aria-current="page"' : ''}>Runtime Status & Capacity</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}why/">Why SPPA?</a><a href="${B}paper/">Position Paper</a><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><a href="${B}features/">All protocol features</a><div class="side-group">Protocol feature groups</div><a href="${B}spec/feature-groups/0.1.0-draft.1/" ${current === 'feature-groups' ? 'aria-current="page"' : ''}>Eight groups & Decision Record</a><a href="${B}spec/decision-layers/0.1.0-draft.1/" ${current === 'decision-layers' ? 'aria-current="page"' : ''}>Historical six-layer model</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><a href="${B}design/runtime-status/" ${current === 'runtime-status' ? 'aria-current="page"' : ''}>Runtime Status & Capacity</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
   function documents() {

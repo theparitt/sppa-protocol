@@ -36,7 +36,7 @@ patent filing or certification claim is authorized by this plan.
 | --- | --- | --- |
 | Protocol | Core 0.1.1, typed contracts, FFmpeg HTTP flow, receipts, capacity, eight-group model (six-layer history retained) | Full semantic decision and job-bound offer contracts are not implemented |
 | Runtime | Experimental snapshot/heartbeat receiver checks and authorized HTTP probe | Native heartbeat publishing, subscriptions and Hub ingestion remain future work |
-| Hub | Local Rust/SQLite MVP, agent credentials, structured search, jobs, artifacts and receipt verification | One provider; no complete cross-provider offer comparison or formal reputation |
+| Hub | Local Rust/SQLite MVP, agent credentials, structured search, jobs, artifacts and receipt verification | Two FFmpeg deployments and one BG provider now execute; no binding offers, MCP or formal reputation |
 | Execution binding | Actual HTTP execution and caller without FFmpeg lookup | MCP binding and its end-to-end proof remain to be built |
 | Website | Authored documentation and local build | Public hosting is paused, not a release-ready service |
 
@@ -132,3 +132,11 @@ The workflow validates private changes but configures/uploads/deploys Pages only
 when the repository is public **and** `SPPA_PUBLIC_RELEASE_ENABLED` is explicitly
 `true`. Keep that switch unset during this stage. A manual validation run alone
 does not publish. Do not enable it merely because M2 passes.
+
+## 2026-10-05 paper and domain preparation
+
+The Position Paper 0.1-draft.1 is authored in `docs/position-paper.md` and rendered
+for `/paper/` and `/paper/0.1-draft.1/`. `/why/` is the shorter entry before spec.
+Proposed domain roles: `sppahub.org` for the standards/paper site, `sppahub.com`
+for the agent service. Routes are prepared; purchase/activation/publication are
+not performed. The Hub remote proof is functional evidence, not M0–M2 completion.

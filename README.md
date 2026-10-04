@@ -128,3 +128,27 @@ No Core wire/schema version changes are introduced. The sibling Hub supplies
 SSH/Docker runtime adapters and the private remote-worker proof. Backend probe
 failures make admission unavailable; previously accepted idempotency replays
 remain available. Wrapper capacity does not measure the entire remote machine.
+
+## Position Paper and proposed sppahub.org structure
+
+Start with [Why SPPA?](docs/why.md), then
+[SPPA Position Paper 0.1-draft.1](docs/position-paper.md). The Markdown source
+renders both `/paper/` and `/paper/0.1-draft.1/`, with a downloadable source.
+Before a new numbered edition, preserve this edition's Markdown and add its
+archive route; do not replace its versioned content with the new edition.
+
+Prepared site routes: `/why/`, `/paper/`, `/spec/`, `/architecture/`, `/examples/`,
+`/conformance/` and `/github/`. Existing deep specification links remain valid.
+The local preview prefixes these with `/sppa-protocol/`.
+
+For a future root-domain build (this only writes local `dist`):
+
+```sh
+BASE_PATH=/ SITE_ORIGIN=https://sppahub.org npm run build
+BASE_PATH=/ node scripts/check-site.mjs
+```
+
+The default remains the earlier GitHub base path. Domain configuration and
+public deployment require a later owner instruction; private hosting gates stay
+unchanged. Architecture comparisons and hypothetical examples are distinct from
+real development evidence and planned features.

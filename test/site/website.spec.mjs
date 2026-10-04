@@ -56,6 +56,8 @@ test('Purpose precedes documents and the new architecture is separate from the p
  await page.getByRole('link',{name:'Read the documents',exact:false}).click();
  await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Protocol Suite');
  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Architecture',exact:true}).click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA and Hub architecture');
+ await page.getByRole('link',{name:'architecture and execution bindings',exact:true}).click();
  await expect(page.getByRole('heading',{level:1})).toContainText('the semantic decision layer');
  await expect(page.locator('main')).toContainText('They are not MCP bindings');
  await expect(page.locator('main')).toContainText('Neither MCP nor a public Hub is required');
@@ -68,7 +70,7 @@ test('Every chapter renders without horizontal page overflow on narrow screens',
   await page.setViewportSize({width,height:900});await page.goto(root);await noOverflow(page);
  }
  await page.setViewportSize({width:320,height:740});
- for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', 'design/runtime-status/', 'spec/decision-layers/0.1.0-draft.1/', 'spec/feature-groups/0.1.0-draft.1/']) {
+ for(const path of ['why/','paper/','paper/0.1-draft.1/','spec/','architecture/','examples/','conformance/','github/','', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', 'design/runtime-status/', 'spec/decision-layers/0.1.0-draft.1/', 'spec/feature-groups/0.1.0-draft.1/']) {
   const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
  for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){
@@ -105,4 +107,19 @@ test('Eight groups retain hard eligibility, caller decision and a feedback loop'
  await expect(page.locator('main')).toContainText('not preferences to average');
  await expect(page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Specification',exact:true})).toHaveAttribute('aria-current','page');
  await page.setViewportSize({width:390,height:844});await noOverflow(page);
+});
+
+test('Paper-first reading path shares latest/version source and labels hypothetical evidence',async({page})=>{
+ await page.goto(root);await page.getByRole('link',{name:'Read the Paper',exact:false}).first().click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA: Semantic Capabilities and Decision Contracts for AI-Operated Software');
+ await expect(page.locator('main')).toContainText('Version 0.1-draft.1');
+ await expect(page.locator('main')).toContainText('hypothetical teaching data');
+ await expect(page.locator('main')).toContainText('remain unimplemented');
+ const latest=await page.locator('article').innerHTML();
+ await page.getByRole('link',{name:'Versioned page',exact:true}).click();
+ expect(await page.locator('article').innerHTML()).toBe(latest);
+ const raw=await page.request.get(root+'paper/0.1-draft.1.md');expect(raw.ok()).toBe(true);expect(await raw.text()).toContain('## 13. Evaluation agenda');
+ await page.goto(root+'why/');await expect(page.getByRole('heading',{level:1})).toHaveText('Why SPPA?');
+ await expect(page.locator('main')).toContainText('All values are hypothetical');
+ await page.getByRole('link',{name:'Position Paper',exact:true}).click();await expect(page.locator('main')).toContainText('Evaluation agenda');
 });

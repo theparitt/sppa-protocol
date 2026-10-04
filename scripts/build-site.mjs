@@ -1,3 +1,4 @@
+import { readerPages } from './build-reader-pages.mjs';
 import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import { resolve, join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,7 +29,7 @@ const assetSources = await Promise.all(['site/style.css', 'site/site.mjs'].map(p
 const assetVersion = createHash('sha256').update(Buffer.concat(assetSources)).digest('hex').slice(0,12);
 const { page, sidebar, home, documents, link, repository, origin } = templates(B, docs, '0.1.1', assetVersion);
 await rm(out,{recursive:true,force:true}); await mkdir(out,{recursive:true});
-async function put(path, body) { const target=join(out,path); await mkdir(dirname(target),{recursive:true});await writeFile(target,body); }
+async function put(path, body) { const target=join(out,path); await mkdir(dirname(target),{recursive:true});if(path.endsWith('.html'))body=body.replaceAll('href="/sppa-protocol/','href="'+B).replaceAll('src="/sppa-protocol/','src="'+B);await writeFile(target,body); }
 const entries=[],archivePaths=[];
 for (const V of ['0.1.0','0.1.1']) {
  const sourceNames = new Set(await readdir(join(root,`spec/${V}`)));
@@ -83,9 +84,10 @@ await cp(join(root,'schemas/runtime-status'),join(out,'schemas/runtime-status'),
 await cp(join(root,'openapi'),join(out,'openapi'),{recursive:true});await cp(join(root,'examples'),join(out,'examples'),{recursive:true});
 await mkdir(join(out,'assets'));await mkdir(join(out,'assets/illustrations'));for(const file of (await readdir(join(root,'site/illustrations'))).filter(file=>file.endsWith('.png')))await cp(join(root,'site/illustrations',file),join(out,'assets/illustrations',file));await cp(join(root,'site/style.css'),join(out,'assets/style.css'));await cp(join(root,'site/site.mjs'),join(out,'assets/site.mjs'));
 await put('.well-known/sppa.json',JSON.stringify({sppa:'0.1.1',kind:'specification',status:'working-draft',title:'SPPA Core',specification:origin+link('overview'),schemas:origin+B+'schemas/index.json',openapi:origin+B+'openapi/0.1.1.json',conformance:origin+link('conformance'),repository},null,2));
+await readerPages({root,B,page,put,entries});
 await put('search-index.json',JSON.stringify(entries));
 await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#fff"/><path d="M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z" fill="#333"/></svg>');
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));
-console.log(`Built ${docs.length+10} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
+console.log(`Built ${docs.length+18} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
