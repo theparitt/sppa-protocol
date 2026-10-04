@@ -8,14 +8,15 @@ compare?** Together with **Semantic Capability**, it forms the center of SPPA.
 It defines meaning and decision evidence independently of transport. Execution
 may use MCP, HTTP, or another declared binding; MCP is not required.
 
-## Decision data in seven groups
+## Seven dimensions within the eight feature groups
 
-The proposed [Decision Information Layers specification](/sppa-protocol/spec/decision-layers/0.1.0-draft.1/)
-separates declared capability/configuration, runtime, job-specific offer,
-execution/validation evidence, evaluation/feedback and aggregated reputation.
-Policy and authority apply across all six. Layers classify the kind of assertion;
-the seven groups below classify its subject. An operational value can be a declared
-limit, a fresh queue measurement, an ETA or a historical timing statistic.
+The primary [eight feature groups](/sppa-protocol/spec/feature-groups/0.1.0-draft.1/)
+organize responsibilities: Capability, Policy, Runtime, Offer, Execution, Evidence,
+Evaluation and Reputation. The caller owns the Decision Record; historical evidence
+feeds later choices. Policy is both an explicit group and a hard boundary throughout.
+The seven dimensions below label a record's subject, not extra primary groups.
+An operational value can be a declared limit, a fresh queue measurement, an ETA
+or a historical timing statistic.
 
 | Group | Information the agent uses |
 | --- | --- |
@@ -27,7 +28,7 @@ limit, a fresh queue measurement, an ETA or a historical timing statistic.
 | Trust | Verified executions, evidence source, reputation, sample size and confidence |
 | Reuse | Whether an authorized compatible artifact exists, its freshness and reuse terms |
 
-These groups form the caller's **decision surface**. They describe the proposed
+These dimensions form the caller's **decision surface**. They describe the proposed
 contract, not metrics already collected by the reference provider. Required
 privacy and rights are hard gates; speed, cost, and quality are preferences only
 after the gates pass. The main AI makes the final choice.

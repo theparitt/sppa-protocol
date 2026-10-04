@@ -68,7 +68,7 @@ test('Every chapter renders without horizontal page overflow on narrow screens',
   await page.setViewportSize({width,height:900});await page.goto(root);await noOverflow(page);
  }
  await page.setViewportSize({width:320,height:740});
- for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', 'design/runtime-status/', 'spec/decision-layers/0.1.0-draft.1/']) {
+ for(const path of ['', 'features/', 'documents/', 'design/concept/', 'design/architecture/', 'design/decision-contract/', 'design/runtime-status/', 'spec/decision-layers/0.1.0-draft.1/', 'spec/feature-groups/0.1.0-draft.1/']) {
   const response=await page.goto(root+path);expect(response.status()).toBe(200);await expect(page.getByRole('heading',{level:1})).toBeVisible();await noOverflow(page);
  }
  for(const chapter of ['overview','messages','discovery','policy','admission','jobs','artifacts','security','errors','quickstart','conformance','governance']){
@@ -89,14 +89,15 @@ test('Featured capabilities open the complete catalog with honest implementation
  await expect(page.locator('#search-results')).toContainText('Protocol features');
 });
 
-test('Six layers explain the example before opening the full proposed specification',async({page})=>{
+test('Eight groups retain hard eligibility, caller decision and a feedback loop',async({page})=>{
  await page.goto(root);
- await expect(page.locator('#decision-layers .layer-number')).toHaveText(['L1','L2','L3','L4','L5','L6']);
- await expect(page.locator('#decision-layers .layer-policy')).toContainText('A good review cannot override');
- await page.getByRole('link',{name:'Read the six-layer specification',exact:false}).click();
- await expect(page.getByRole('heading',{level:1})).toHaveText('Decision Information Layers');
+ await expect(page.locator('#feature-groups .group-number')).toHaveText(['G1','G2','G3','G4','G5','G6','G7','G8']);
+ await expect(page.locator('#feature-groups .group-feedback')).toContainText('Experience feeds the next decision');
+ await expect(page.locator('#feature-groups .group-decision')).toContainText('A good review cannot override');
+ await page.getByRole('link',{name:'Read the eight-group specification',exact:false}).click();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('SPPA Feature Groups');
  await expect(page.locator('main')).toContainText('not a new Core wire');
- await expect(page.locator('main')).toContainText('not a seventh score');
+ await expect(page.locator('main')).toContainText('not preferences to average');
  await expect(page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Specification',exact:true})).toHaveAttribute('aria-current','page');
  await page.setViewportSize({width:390,height:844});await noOverflow(page);
 });

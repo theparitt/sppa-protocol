@@ -1,7 +1,7 @@
 import { comic } from './comic.mjs';
 import { structure } from './structure.mjs';
 import { featured } from './features.mjs';
-import { decisionLayers } from './layers.mjs';
+import { featureGroups } from './feature-groups.mjs';
 
 export function landing(B, link, repository) {
   return `<main id="main" class="landing">
@@ -13,7 +13,7 @@ export function landing(B, link, repository) {
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
     <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
-    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#decision-layers">Six information layers &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
+    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#feature-groups">Eight feature groups &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
   </section>
 
   ${featured(B)}
@@ -33,7 +33,7 @@ export function landing(B, link, repository) {
     <p class="caption">Implemented example: <code>video.transcode</code>. Audio separation, 3D rendering, and document extraction are possible future capabilities, not services currently offered here.</p>
   </section>
 
-  ${decisionLayers(B)}
+  ${featureGroups(B)}
 
   <section class="landing-section" id="lifecycle" aria-labelledby="lifecycle-title">
     <div class="section-heading"><p class="eyebrow">02 / The whole lifecycle</p><h2 id="lifecycle-title">Built for AI, end to end.</h2><p>From discovery to execution, monitoring, evaluation, reputation, and composition — the entire SPPA lifecycle is designed for AI agents.</p></div>
@@ -51,8 +51,8 @@ export function landing(B, link, repository) {
 
   <section class="landing-section" id="decisions" aria-labelledby="decision-title">
     <div class="section-heading"><p class="eyebrow">03 / Why selection matters</p><h2 id="decision-title">Give AI enough information<br>to make a choice.</h2><p>Finding a tool is only the beginning. When several providers offer the same capability, the agent needs comparable terms and evidence to decide which fits this job.</p></div>
-    <h3>Seven groups of decision data.</h3>
-    <dl class="decision-data" aria-label="Decision data groups">
+    <h3>Seven dimensions of decision data.</h3>
+    <dl class="decision-data" aria-label="Decision data dimensions">
       <div><dt>Technical</dt><dd>Capability, features, inputs, outputs, and limitations.</dd></div>
       <div><dt>Operational</dt><dd>Health, queue, capacity, estimated wait and runtime.</dd></div>
       <div><dt>Quality</dt><dd>Scoped quality, reliability, validation and composition success.</dd></div>

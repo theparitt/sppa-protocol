@@ -1,0 +1,25 @@
+import { featureIcon } from './feature-icons.mjs';
+export const groupSpecification = 'spec/feature-groups/0.1.0-draft.1/';
+const groups = [
+ ['catalog','Capability & Contract','Can it do the job?','Features, inputs, outputs and declared limits.','“I convert videos to H.264, with at most 4 jobs running at once.”','Core declarations work; full semantic contract proposed'],
+ ['identity','Policy & Eligibility','Am I allowed to use it?','Privacy, rights, location, permissions and approval are hard gates.','“Confidential input and commercial use are allowed. Unknown required rights do not pass.”','Core policy works; full rights contract proposed'],
+ ['monitoring','Runtime & Availability','Is it ready now?','Fresh health, queue and admission observations, with source and expiry.','“All 4 slots are occupied. Two jobs are waiting, but the queue has room.”','Core health works; richer runtime profile experimental'],
+ ['pricing','Offer & Economics','What will this job cost and take?','Terms for these inputs: total charges, timing, ceiling and quote expiry.','“Estimated wait: 20s. Run: 40s. Maximum total job charge: $0.05.”','Proposed offer contract'],
+ ['reuse','Execution, Artifact & Reuse','What is happening, and where is the result?','Track the job and authorized artifacts; check whether a compatible result can be reused.','“The selected job is running. Reuse needs matching inputs, rights and freshness; it is not automatically free.”','Core jobs and artifacts work; revision and reuse planned'],
+ ['validation','Evidence & Validation','What actually happened?','Run facts, receipt integrity and measurable output checks stay separate from opinion.','“This run waited 25s and took 42s. The output passed the H.264 format check.”','Core receipts and integrity checks work; full validation contract planned'],
+ ['review','Evaluation & Feedback','Does the result meet the goal?','A caller or evaluator uses a stated rubric and supplies evidence-backed feedback.','“Goal fit: 4/5 on this rubric. Return FPS in the output metadata.”','Planned'],
+ ['reputation','Reputation & Learning','What should the next agent learn?','Scope historical outcomes to workload, version and time window, with uncertainty.','“97 of 100 resolved runs completed. Five more runs have unknown outcomes.”','Planned'],
+];
+const cards = (slice,offset) => `<ol class="layer-grid group-grid" start="${offset+1}">${slice.map(([icon,name,question,description,example,status],i)=>`<li><div class="layer-card-heading">${featureIcon(icon)}<span class="group-number">G${offset+i+1}</span></div><h3>${question}</h3><p class="layer-name">${name}</p><p>${description}</p><blockquote>${example}</blockquote><span class="feature-status">${status}</span></li>`).join('')}</ol>`;
+export function featureGroups(B) {
+ return `<section class="landing-section" id="feature-groups" aria-labelledby="groups-title"><span id="decision-layers" aria-hidden="true"></span>
+ <div class="section-heading"><p class="eyebrow">The protocol / Eight feature groups</p><h2 id="groups-title">Can it do the job?<br>May I use it? What happens next?</h2><p>Eight groups keep capability, permission, current readiness, job terms and experience separate. The main AI uses this information to choose; it remains the caller's decision.</p></div>
+ <div class="layer-example-intent"><strong>One simple example</strong><p>“Convert this confidential video to H.264 for commercial delivery. I can wait, and you may spend at most $0.05.”</p><span class="example-label">Illustrative data · proposed full lifecycle, not a live offer</span></div>
+ <p class="group-stage">Before choosing · capability, eligibility, readiness and terms</p>${cards(groups.slice(0,4),0)}
+ <div class="group-decision"><span class="flow-label">Main AI decides · caller-owned Decision Record</span><h3>“This provider fits my rules. I choose it.”</h3><p>Record the selected provider, bound offer, hard requirements, priorities and reasons. Privacy is a gate, not a weight. A good review cannot override denied or unknown required rights.</p><span class="feature-status">Proposed Decision Record · not a ninth feature group</span></div>
+ <p class="group-stage">Use the result · collect evidence, evaluate and learn</p>${cards(groups.slice(4),4)}
+ <div class="group-feedback">${featureIcon('composition')}<div><h3>Experience feeds the next decision.</h3><p>Execution produces evidence. Evaluation adds a scoped judgment. Reputation summarizes eligible historical records so the next agent can make a better-informed choice.</p><a href="#feature-groups">Evidence &rarr; Evaluation &rarr; Reputation &rarr; Next decision &uarr;</a></div></div>
+ <p class="caption">Groups describe responsibilities, not eight transports or a trust ranking. Policy remains enforced throughout execution, transfer and reuse. Reuse and past evidence can be considered before choosing. A fresh heartbeat does not refresh an old queue; an offer reserves no compute.</p>
+ <a class="text-link" href="${B}${groupSpecification}">Read the eight-group specification &rarr;</a>
+ </section>`;
+}

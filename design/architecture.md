@@ -30,6 +30,33 @@ Humans supply intent and receive outcomes. AI agents are the operational callers
 throughout the lifecycle. Human-facing pages explain and inspect the system; they
 are not a manual application workflow for using each provider.
 
+## Eight feature groups and the caller decision
+
+The primary [feature-group specification](/sppa-protocol/spec/feature-groups/0.1.0-draft.1/)
+organizes Capability & Contract, Policy & Eligibility, Runtime & Availability,
+Offer & Economics, Execution/Artifact/Reuse, Evidence & Validation,
+Evaluation & Feedback, and Reputation & Learning.
+
+The caller-owned Decision Record binds the selected provider/offer, hard requirement
+outcomes, priorities, evidence and reasons. It is not a ninth group or a provider's
+choice. The Hub supplies a decision surface; main AI selects under human authority.
+Privacy, permissions and required rights cannot be averaged into preference scores.
+
+Execution returns authorized artifacts. Checks produce evidence; evaluator judgments
+remain distinct. Aggregated experience can inform the next caller's choice:
+
+```text
+Capability -> Policy -> Runtime -> Offer -> Main AI decision
+  -> Execution / Artifact / Reuse -> Evidence -> Evaluation -> Reputation
+  -> next decision's context
+```
+
+Policy remains enforced after selection, at execution, transfer, revision and reuse.
+Reuse can be evaluated before deciding to execute new work. Group order is not a
+mandatory timing sequence or trust hierarchy. The original six-layer draft is
+retained as history; Core artifacts remain unchanged. Full offers, session/reuse,
+evaluation, reputation and automatic learning pipelines are still proposed.
+
 ## The lifecycle
 
 **Discover → Select → Run → Monitor → Evaluate → Rate → Compose**

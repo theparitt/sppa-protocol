@@ -34,7 +34,7 @@ patent filing or certification claim is authorized by this plan.
 
 | Component | Current evidence | Gap to the target |
 | --- | --- | --- |
-| Protocol | Core 0.1.1, typed contracts, FFmpeg HTTP flow, receipts, capacity, six-layer model | Full semantic decision and job-bound offer contracts are not implemented |
+| Protocol | Core 0.1.1, typed contracts, FFmpeg HTTP flow, receipts, capacity, eight-group model (six-layer history retained) | Full semantic decision and job-bound offer contracts are not implemented |
 | Runtime | Experimental snapshot/heartbeat receiver checks and authorized HTTP probe | Native heartbeat publishing, subscriptions and Hub ingestion remain future work |
 | Hub | Local Rust/SQLite MVP, agent credentials, structured search, jobs, artifacts and receipt verification | One provider; no complete cross-provider offer comparison or formal reputation |
 | Execution binding | Actual HTTP execution and caller without FFmpeg lookup | MCP binding and its end-to-end proof remain to be built |
@@ -58,8 +58,8 @@ unknowns. A quote reserves no compute and grants no payment authority.
 
 Test stale offers, changed inputs/configuration, unknown rights, privacy failure,
 wrong scope, unbounded charges, incompatible units, non-comparable quality, and
-healthy-but-saturated queueing. Define the intended evidence for each of the six
-layers; do not require an entire reputation service for this milestone.
+healthy-but-saturated queueing. Define the intended evidence for each of the eight
+groups; do not require an entire reputation service for this milestone.
 
 ## M1: return a real decision surface from Hub
 

@@ -51,17 +51,17 @@ await put('features/index.html',page('Protocol features',featureCatalog(B),'feat
 entries.push({title:'Protocol features',path:'features/',text:categories.map(g=>[g.title,g.owner,...g.items.map(x=>x.name+' '+x.description+' '+(x.reference?'Reference':x.experimental?'Experimental':'Planned'))].join(' ')).join(' ')});
 await put('documents/index.html',page('SPPA Protocol Suite',documents(),'documents','documents/'));
 entries.push({title:'SPPA Protocol Suite',path:'documents/',text:'Published Core 0.1.1 reference document index, specifications, schemas and version history. Earlier HTTP proof; semantic decision standard is transport independent.'});
-for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract'],['runtime-status','Runtime Status & Capacity'],['decision-layers','Decision Information Layers']]) {
- const layered=slug==='decision-layers';
- const text = await readFile(join(root,layered?'spec/decision-layers/0.1.0-draft.1.md':`design/${slug}.md`),'utf8');
+for (const [slug,title] of [['concept','SPPA Concept'],['architecture','Architecture & execution bindings'],['decision-contract','AI Decision Contract'],['runtime-status','Runtime Status & Capacity'],['decision-layers','Decision Information Layers (historical)'],['feature-groups','SPPA Feature Groups']]) {
+ const layered=slug==='decision-layers',grouped=slug==='feature-groups';
+ const text = await readFile(join(root,grouped?'spec/feature-groups/0.1.0-draft.1.md':layered?'spec/decision-layers/0.1.0-draft.1.md':`design/${slug}.md`),'utf8');
  const renderer = new Renderer();
  const headings = [];
  renderer.heading = token => { const label=token.text.replaceAll('`','').replaceAll('*','');const id=label.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');if(token.depth===2)headings.push([id,label]);return `<h${token.depth} id="${id}">${escape(label)}</h${token.depth}>`; };
  renderer.code = token => `<div class="code-block"><div class="code-label">${escape(token.lang||'EXAMPLE')}</div><button type="button" class="copy" aria-label="Copy code example">Copy</button><pre><code>${escape(token.text)}</code></pre></div>`;
  const html=marked.parse(text,{renderer}).replaceAll('<table>','<div class="table-wrap"><table>').replaceAll('</table>','</table></div>');
- const path=layered?'spec/decision-layers/0.1.0-draft.1/':`design/${slug}/`;
- const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">${layered?'Proposed specification / Decision Information Layers 0.1.0-draft.1':'Design direction / Transport-independent semantic and decision contracts'}</div><article class="prose">${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
- await put(path+'index.html',page(title,body,layered?'layers':slug==='concept'?'concept':'design',path));
+ const path=grouped?'spec/feature-groups/0.1.0-draft.1/':layered?'spec/decision-layers/0.1.0-draft.1/':`design/${slug}/`;
+ const body=`<div class="doc-layout">${sidebar(slug)}<main class="doc-body" id="main"><div class="breadcrumb">${grouped?'Proposed specification / Eight Feature Groups 0.1.0-draft.1':layered?'Historical specification / Decision Information Layers 0.1.0-draft.1':'Design direction / Transport-independent semantic and decision contracts'}</div><article class="prose">${layered?`<div class="note">Historical six-layer model. The current <a href="${B}spec/feature-groups/0.1.0-draft.1/">eight-group specification</a> supersedes this classification; the original document is retained.</div>`:''}${html}</article></main><aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong>${headings.map(([id,label])=>`<a href="#${id}">${escape(label)}</a>`).join('')}</aside></div>`;
+ await put(path+'index.html',page(title,body,grouped?'groups':layered?'layers':slug==='concept'?'concept':'design',path));
  entries.push({title,path,text:text.replace(/[#*`>|]/g,'').replace(/\s+/g,' ').trim()});
 }
 const files=(await readdir(join(root,'schemas/0.1.1'))).filter(x=>x.endsWith('.json')).sort();
@@ -88,4 +88,4 @@ await put('favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32
 await put('.nojekyll','');await put('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${origin+B}sitemap.xml\n`);
 await put('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...entries.map(x=>x.path),...archivePaths].map(path=>`<url><loc>${origin+B+path}</loc></url>`).join('')}</urlset>`);
 await put('404.html',page('Page not found',`<main id="main" class="wrap section"><h1>Page not found</h1><p>This chapter may have moved. Browse the current draft or search the documentation.</p><a class="button" href="${link('overview')}">Read Core 0.1.1 →</a></main>`,'','404.html'));
-console.log(`Built ${docs.length+9} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);
+console.log(`Built ${docs.length+10} current and ${archivePaths.length} archived pages, ${files.length} schemas, OpenAPI, search and discovery at ${B}`);

@@ -1,9 +1,10 @@
 # SPPA Concept
 
-The proposed [six-layer specification](/sppa-protocol/spec/decision-layers/0.1.0-draft.1/)
-keeps provider declarations, current status, job terms, execution evidence,
-evaluation and historical reputation distinct. Policy and authority apply to every
-layer; ratings cannot override permissions or refresh stale runtime information.
+The proposed [eight-group specification](/sppa-protocol/spec/feature-groups/0.1.0-draft.1/)
+separates Capability, Policy, Runtime, Offer, Execution, Evidence, Evaluation and
+Reputation. The caller owns the Decision Record; experience feeds the next decision.
+Policy is an explicit group and remains enforced throughout. Ratings cannot
+replace permission, and a heartbeat cannot refresh stale queue information.
 
 **Foundational concept · 2026-10-03 · Working draft**
 
@@ -86,7 +87,7 @@ It combines four distinct objects:
 | Machine reputation | Scoped historical measurements with provenance, sample size, and uncertainty |
 | Caller decision policy | Hard requirements, authority, and preferences for this goal |
 
-The decision data covers seven groups:
+The decision data covers seven dimensions within the eight primary feature groups:
 
 | Group | Examples |
 | --- | --- |
