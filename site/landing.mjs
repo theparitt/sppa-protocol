@@ -1,6 +1,7 @@
 import { comic } from './comic.mjs';
 import { structure } from './structure.mjs';
 import { featured } from './features.mjs';
+import { decisionLayers } from './layers.mjs';
 
 export function landing(B, link, repository) {
   return `<main id="main" class="landing">
@@ -12,7 +13,7 @@ export function landing(B, link, repository) {
     <p class="agent-audience">The tools are for AI agents to operate, not for humans to operate directly. This website explains the design to people building and evaluating it.</p>
     <p class="core-definition"><strong>Semantic Capability</strong> + <strong>AI Decision Contract</strong></p>
     <div class="actions"><a class="button primary" href="#sppa-in-a-picture">See how SPPA works <span aria-hidden="true">↓</span></a><a class="button" href="#proof">See the working proof <span aria-hidden="true">↗</span></a><a class="text-link" href="${B}documents/">Read the documents →</a></div>
-    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
+    <p class="landing-status">Proposed open standard · Working HTTP reference · Transport independent · <a href="#features">Explore features &darr;</a> &middot; <a href="#decision-layers">Six information layers &darr;</a> &middot; <a href="#structure">View the structure ↓</a></p>
   </section>
 
   ${featured(B)}
@@ -31,6 +32,8 @@ export function landing(B, link, repository) {
     <p class="setup-benefit">For a remote capability, the caller can work from its contract without installing the application or learning its command syntax. Providers still install and maintain their own software.</p>
     <p class="caption">Implemented example: <code>video.transcode</code>. Audio separation, 3D rendering, and document extraction are possible future capabilities, not services currently offered here.</p>
   </section>
+
+  ${decisionLayers(B)}
 
   <section class="landing-section" id="lifecycle" aria-labelledby="lifecycle-title">
     <div class="section-heading"><p class="eyebrow">02 / The whole lifecycle</p><h2 id="lifecycle-title">Built for AI, end to end.</h2><p>From discovery to execution, monitoring, evaluation, reputation, and composition — the entire SPPA lifecycle is designed for AI agents.</p></div>

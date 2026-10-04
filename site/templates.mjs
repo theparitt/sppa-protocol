@@ -12,10 +12,10 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
     ['Concept', B + 'design/concept/', 'concept'],
     ['Architecture', B + 'design/architecture/', 'design'],
     ['Documents', B + 'documents/', 'documents'],
-    ['Specification', link('overview'), 'spec'],
+    ['Specification', version==='0.1.1'?B+'spec/decision-layers/0.1.0-draft.1/':link('overview'), 'spec'],
     ['Schemas', B + 'schemas/', 'schemas'],
     ['Conformance', link('conformance'), 'conformance'],
-  ].map(([label, url, id]) => `<a href="${url}" ${active === id ? 'aria-current="page"' : ''}>${label}</a>`).join('');
+  ].map(([label, url, id]) => `<a href="${url}" ${(active === id || active === 'layers' && id === 'spec') ? 'aria-current="page"' : ''}>${label}</a>`).join('');
 
   function page(title, body, active = 'spec', path = '') {
     return `<!doctype html>
@@ -55,7 +55,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   <footer class="footer">
     <div class="wrap footer-inner">
       <span><b>SPPA Protocol</b> · Specific Purpose Platform/App</span>
-      <div class="footer-links"><span>${['design','concept','features'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
+      <div class="footer-links"><span>${active==='layers' ? 'Proposed specification draft' : ['design','concept','features'].includes(active) ? 'Design draft' : `Reference draft ${version}`}</span><a href="${link('governance')}">Governance</a><a href="${repository}/blob/main/LICENSE">Apache-2.0</a><a href="${repository}">Source</a><button type="button" class="print-button">Print document</button></div>
     </div>
   </footer>
   <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation">
@@ -70,7 +70,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
   function sidebar(current) {
     const group = items => items.map(([slug, title]) => `<a href="${link(slug)}" ${current === slug ? 'aria-current="page"' : ''}>${escape(title)}</a>`).join('');
     const implementation = docs.findIndex(item => item[0] === 'quickstart');
-    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><a href="${B}features/">All protocol features</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><a href="${B}design/runtime-status/" ${current === 'runtime-status' ? 'aria-current="page"' : ''}>Runtime Status & Capacity</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
+    return `<details open class="sidebar"><summary>CONTENTS</summary><a href="${B}documents/" ${current === 'documents' ? 'aria-current="page"' : ''}>Document index</a><a href="${B}features/">All protocol features</a><div class="side-group">Layered specification</div><a href="${B}spec/decision-layers/0.1.0-draft.1/" ${current === 'decision-layers' ? 'aria-current="page"' : ''}>Six decision information layers</a><div class="side-group">Concept & design</div><a href="${B}design/concept/" ${current === 'concept' ? 'aria-current="page"' : ''}>SPPA Concept</a><a href="${B}design/architecture/" ${current === 'architecture' ? 'aria-current="page"' : ''}>Architecture & execution bindings</a><a href="${B}design/decision-contract/" ${current === 'decision-contract' ? 'aria-current="page"' : ''}>AI Decision Contract</a><a href="${B}design/runtime-status/" ${current === 'runtime-status' ? 'aria-current="page"' : ''}>Runtime Status & Capacity</a><div class="side-group">Core ${version}</div>${group(docs.slice(0, implementation))}<div class="side-group">Implementation</div>${group(docs.slice(implementation))}<a href="${B}schemas/" ${current === 'schemas' ? 'aria-current="page"' : ''}>Schemas & API</a><div class="side-group">Project</div><a href="${repository}">Source repository</a></details>`;
   }
 
   function documents() {
@@ -89,6 +89,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
           <p>SPPA (Specific Purpose Platform/App) defines a common contract for specialized software used by AI agents. The <a href="${B}design/architecture/">new architecture direction</a> centers on Semantic Capability and AI Decision Contract, independently of execution transport. The published Core ${version} below documents the HTTP reference experiment; it is retained for reproducibility and does not yet implement the full decision standard.</p>
           <p>The protocol supports direct providers and private registries. SPPA Hub is a separate reference service. Providers choose their own software, runtime and infrastructure.</p>
           <p><a href="${B}features/">Browse all protocol features</a> for responsibilities, reference coverage and planned work across the ecosystem.</p>
+          <h2 id="layered-specification">Layered protocol specification</h2><p>The <a href="${B}spec/decision-layers/0.1.0-draft.1/">Decision Information Layers specification</a> separates declared capability, runtime status, job-specific offers, execution/validation evidence, evaluation/feedback and aggregated reputation. Policy and authority apply across every layer. This proposed model keeps the exact Core HTTP reference below unchanged.</p>
           <h2 id="concept-and-design">Concept and design direction</h2>
           <p>Start with the <a href="${B}design/concept/">SPPA Concept</a> for purpose, the two core contracts, the AI lifecycle, and a provider-selection example. Continue with <a href="${B}design/architecture/">Architecture & execution bindings</a> and the <a href="${B}design/decision-contract/">AI Decision Contract</a> for detailed design requirements.</p>
           <h2 id="contents">Contents</h2>
@@ -101,7 +102,7 @@ export function templates(B, docs, version = '0.1.1', assetVersion = '') {
           <p>Previous publication: <a href="${B}spec/0.1.0/overview/">Core 0.1.0</a>. Its versioned specification, schemas and API binding remain available.</p>
         </article>
       </main>
-      <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#concept-and-design">Concept and design</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
+      <aside class="toc" aria-label="On this page"><strong>ON THIS PAGE</strong><a href="#abstract">Abstract</a><a href="#layered-specification">Layered specification</a><a href="#concept-and-design">Concept and design</a><a href="#contents">Contents</a><a href="#machine-contracts">Machine contracts</a><a href="#version-history">Versions and status</a></aside>
     </div>`;
   }
   const home = () => landing(B, link, repository);

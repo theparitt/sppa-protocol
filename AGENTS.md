@@ -10,6 +10,12 @@ definition of SPPA. Reuse existing execution plumbing in each binding.
 Preserve its existing exact snapshots and runnable proof. Main AI selects;
 Hub returns candidates. Human-facing landing explains purpose before specs.
 Distinguish proposed lifecycle/contracts from implemented reference behavior.
+Decision information is organized into six layers in
+spec/decision-layers/0.1.0-draft.1.md: capability/configuration, runtime,
+job-specific offer, execution/validation evidence, evaluation/feedback and
+aggregated reputation. Policy and authority apply across all layers. Layers
+classify evidence; the seven decision groups classify its subject. Neither
+layer number nor an AI review automatically establishes greater trust.
 
 Read README.md and docs/understanding.md before changes. Source history, when
 available locally, lives in ignored docs/reference. Public contract decisions

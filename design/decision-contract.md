@@ -10,6 +10,13 @@ may use MCP, HTTP, or another declared binding; MCP is not required.
 
 ## Decision data in seven groups
 
+The proposed [Decision Information Layers specification](/sppa-protocol/spec/decision-layers/0.1.0-draft.1/)
+separates declared capability/configuration, runtime, job-specific offer,
+execution/validation evidence, evaluation/feedback and aggregated reputation.
+Policy and authority apply across all six. Layers classify the kind of assertion;
+the seven groups below classify its subject. An operational value can be a declared
+limit, a fresh queue measurement, an ETA or a historical timing statistic.
+
 | Group | Information the agent uses |
 | --- | --- |
 | Technical | Semantic capability/version, supported features, input/output meaning and limitations |

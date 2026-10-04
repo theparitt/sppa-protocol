@@ -1,5 +1,10 @@
 # SPPA Concept
 
+The proposed [six-layer specification](/sppa-protocol/spec/decision-layers/0.1.0-draft.1/)
+keeps provider declarations, current status, job terms, execution evidence,
+evaluation and historical reputation distinct. Policy and authority apply to every
+layer; ratings cannot override permissions or refresh stale runtime information.
+
 **Foundational concept · 2026-10-03 · Working draft**
 
 ## Definition

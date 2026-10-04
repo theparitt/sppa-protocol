@@ -31,6 +31,7 @@ SPPA Hub is a separate reference service in the sibling `sppahub` repository.
 - [Public introduction](https://theparitt.github.io/sppa-protocol/)
 - [Published document index](https://theparitt.github.io/sppa-protocol/documents/)
 - [Specification source](spec/0.1.1/overview.md)
+- [Six-layer specification](spec/decision-layers/0.1.0-draft.1.md) — proposed information model, with simple examples on the landing page
 - [Schemas](schemas/0.1.1/) and [OpenAPI binding](openapi/0.1.1.json)
 - [Weakness review and design decisions](docs/open-decisions.md)
 - [Conformance and implementation limits](spec/0.1.1/conformance.md)

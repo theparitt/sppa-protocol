@@ -1,5 +1,16 @@
 # Reconciled SPPA understanding
 
+## Decision information layers
+
+The 2026-10-04 direction separates six kinds of evidence: declared capability and
+configuration; runtime status; job-specific offer; execution and validation evidence;
+evaluation and feedback; aggregated reputation. Policy and authority constrain all
+six. These are information layers, not six new protocols, a transport dependency or
+an automatic hierarchy of trust. The seven decision groups remain complementary:
+they identify the subject, while layers identify the kind of assertion.
+The proposed specification is [Decision Information Layers](../spec/decision-layers/0.1.0-draft.1.md).
+The document revision is independent of Core 0.1.1, whose exact artifacts remain unchanged.
+
 ## Latest boundary and landing correction
 
 The 2026-10-03 follow-up supersedes the earlier execution-plumbing direction.
