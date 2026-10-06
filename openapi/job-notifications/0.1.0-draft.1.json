@@ -1,0 +1,153 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "SPPA optional job notifications",
+    "version": "0.1.0-draft.1",
+    "description": "Portable extension; discovery supplies actual URLs and authority. Core execution remains separate."
+  },
+  "paths": {
+    "/v1/job-notifications": {
+      "get": {
+        "operationId": "replayJobNotifications",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "journal_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,18})$",
+              "default": "0"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owner-scoped replay batch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/batch.schema.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Scope denied"
+          },
+          "409": {
+            "description": "Journal or cursor mismatch"
+          },
+          "429": {
+            "description": "Retry later"
+          },
+          "503": {
+            "description": "Stream budget reached"
+          }
+        }
+      }
+    },
+    "/v1/job-notifications/events": {
+      "get": {
+        "operationId": "subscribeJobNotifications",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "journal_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,18})$",
+              "default": "0"
+            }
+          },
+          {
+            "name": "Last-Event-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owner-scoped SSE inbox batches",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Scope denied"
+          },
+          "409": {
+            "description": "Journal or cursor mismatch"
+          },
+          "429": {
+            "description": "Retry later"
+          },
+          "503": {
+            "description": "Stream budget reached"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

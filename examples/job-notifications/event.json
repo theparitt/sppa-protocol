@@ -1,0 +1,15 @@
+{
+  "id": "1",
+  "event_type": "job.completed",
+  "provider_id": "com.example.ffmpeg",
+  "job_id": "job_example123",
+  "capability": "video.transcode",
+  "capability_version": "1.0.0",
+  "status": "completed",
+  "occurred_at": "2026-10-06T00:00:00.000Z",
+  "recorded_at": "2026-10-06T00:00:00.000Z",
+  "source": "provider_journal",
+  "status_url": "/v1/jobs/get",
+  "receipt_url": "/v1/receipts/get",
+  "result_verified": false
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/batch.schema.json",
+  "title": "SPPA Job Notifications 0.1.0-draft.1 batch",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "const": "sppa.job_notifications"
+    },
+    "version": {
+      "const": "0.1.0-draft.1"
+    },
+    "journal_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/event.schema.json"
+      }
+    },
+    "next_cursor": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18})$"
+    },
+    "latest_cursor": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18})$"
+    },
+    "has_more": {
+      "type": "boolean"
+    },
+    "resync_required": {
+      "type": "boolean"
+    },
+    "reconcile_url": {
+      "type": "string",
+      "maxLength": 2048
+    },
+    "retention": {
+      "type": "object",
+      "properties": {
+        "max_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "max_events": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "max_age_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2592000
+        },
+        "durability": {
+          "enum": [
+            "process",
+            "persistent"
+          ]
+        }
+      },
+      "required": [
+        "max_days",
+        "max_events",
+        "max_age_seconds",
+        "durability"
+      ],
+      "additionalProperties": false
+    },
+    "delivery": {
+      "type": "string"
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "result_verification": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "profile",
+    "version",
+    "journal_id",
+    "items",
+    "next_cursor",
+    "latest_cursor",
+    "has_more",
+    "resync_required",
+    "reconcile_url",
+    "retention",
+    "delivery",
+    "checked_at",
+    "result_verification"
+  ],
+  "additionalProperties": false
+}

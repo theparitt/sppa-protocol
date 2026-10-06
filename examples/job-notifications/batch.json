@@ -1,0 +1,36 @@
+{
+  "profile": "sppa.job_notifications",
+  "version": "0.1.0-draft.1",
+  "journal_id": "8da6c6bd-2231-4fe7-9375-41c7de97a0a8",
+  "items": [
+    {
+      "id": "1",
+      "event_type": "job.completed",
+      "provider_id": "com.example.ffmpeg",
+      "job_id": "job_example123",
+      "capability": "video.transcode",
+      "capability_version": "1.0.0",
+      "status": "completed",
+      "occurred_at": "2026-10-06T00:00:00.000Z",
+      "recorded_at": "2026-10-06T00:00:00.000Z",
+      "source": "provider_journal",
+      "status_url": "/v1/jobs/get",
+      "receipt_url": "/v1/receipts/get",
+      "result_verified": false
+    }
+  ],
+  "next_cursor": "1",
+  "latest_cursor": "1",
+  "has_more": false,
+  "resync_required": false,
+  "reconcile_url": "/v1/jobs/get",
+  "retention": {
+    "max_days": 1,
+    "max_events": 10000,
+    "max_age_seconds": 3600,
+    "durability": "process"
+  },
+  "delivery": "at_least_once_with_cursor; deduplicate event IDs",
+  "checked_at": "2026-10-06T00:00:00.000Z",
+  "result_verification": "Download/hash-check output and verify receipt"
+}

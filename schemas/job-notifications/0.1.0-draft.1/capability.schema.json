@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/capability.schema.json",
+  "title": "SPPA Job Notifications 0.1.0-draft.1 capability",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "0.1.0-draft.1"
+    },
+    "events": {
+      "const": "job_lifecycle"
+    },
+    "discovery": {
+      "const": "provider_manifest.extensions.sppa.job_notifications"
+    }
+  },
+  "required": [
+    "version",
+    "events",
+    "discovery"
+  ],
+  "additionalProperties": false
+}

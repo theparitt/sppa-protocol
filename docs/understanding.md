@@ -156,3 +156,14 @@ choose using available slots, queue depth and evidence-based wait estimates.
 The provider performs final atomic admission; a search result reserves no slot.
 Operational health and saturation are separate. Queueing can be available while
 all execution slots are occupied. Core 0.1.1 makes these semantics explicit.
+
+## Optional job notifications
+
+`sppa.job_notifications` **0.1.0-draft.1** extends Core 0.1.1 through existing
+namespaced extensions. See `spec/job-notifications/0.1.0-draft.1.md` and
+`src/job-notifications.mjs`. Direct providers support private SSE and replay
+without Hub. The reference wrapper advertises process-local retention; Hub
+advertises persistent SQLite retention. Journal identity prevents cursor reuse
+after storage reset. The caller runtime must listen/reconnect and independently
+verify output and receipts. Webhook delivery and arbitrary MCP bindings remain
+outside this draft. Archived Core contracts remain unchanged.

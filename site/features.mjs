@@ -93,7 +93,7 @@ monitoring|Monitoring & availability|Provider reports; Hub and Client observe|er
 *Structured errors: Return typed failures and retry guidance.
 Availability schedules: Declare on-demand or scheduled operating windows.
 ~Runtime status profile: Check scoped status, freshness, ordering and heartbeat evidence.
-Alerts: Subscribe to changes under explicit delivery and visibility rules.
+~Resumable job notifications: Receive owner-scoped lifecycle events via SSE and bounded replay; verify the final result independently.
 composition|Composition & provider handoff|Client or selected workflow provider|design/architecture
 Semantic compatibility: Check meaning as well as MIME type and capability ID.
 Pipeline proposals: Describe compatible steps and required intermediate artifacts.

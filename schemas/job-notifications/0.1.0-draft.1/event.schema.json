@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/event.schema.json",
+  "title": "SPPA Job Notifications 0.1.0-draft.1 event",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18})$"
+    },
+    "event_type": {
+      "enum": [
+        "job.queued",
+        "job.running",
+        "job.completed",
+        "job.failed",
+        "job.canceled",
+        "job.expired"
+      ]
+    },
+    "provider_id": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[A-Za-z0-9_-]{8,124}$",
+      "maxLength": 128
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "capability_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "failed",
+        "canceled",
+        "expired"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "enum": [
+        "provider_journal",
+        "provider_publication",
+        "hub_admission",
+        "hub_observation",
+        "stored_job_snapshot"
+      ]
+    },
+    "status_url": {
+      "type": "string",
+      "maxLength": 2048
+    },
+    "receipt_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2048
+    },
+    "result_verified": {
+      "const": false
+    }
+  },
+  "required": [
+    "id",
+    "event_type",
+    "provider_id",
+    "job_id",
+    "capability",
+    "capability_version",
+    "status",
+    "occurred_at",
+    "recorded_at",
+    "source",
+    "status_url",
+    "receipt_url",
+    "result_verified"
+  ],
+  "additionalProperties": false
+}

@@ -152,3 +152,14 @@ The default remains the earlier GitHub base path. Domain configuration and
 public deployment require a later owner instruction; private hosting gates stay
 unchanged. Architecture comparisons and hypothetical examples are distinct from
 real development evidence and planned features.
+
+## Optional job notifications
+
+`sppa.job_notifications` **0.1.0-draft.1** extends Core 0.1.1 through existing
+namespaced extensions. See `spec/job-notifications/0.1.0-draft.1.md` and
+`src/job-notifications.mjs`. Direct providers support private SSE and replay
+without Hub. The reference wrapper advertises process-local retention; Hub
+advertises persistent SQLite retention. Journal identity prevents cursor reuse
+after storage reset. The caller runtime must listen/reconnect and independently
+verify output and receipts. Webhook delivery and arbitrary MCP bindings remain
+outside this draft. Archived Core contracts remain unchanged.

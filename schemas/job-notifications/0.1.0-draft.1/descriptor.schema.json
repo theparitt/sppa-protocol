@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theparitt.github.io/sppa-protocol/schemas/job-notifications/0.1.0-draft.1/descriptor.schema.json",
+  "title": "SPPA Job Notifications 0.1.0-draft.1 descriptor",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "const": "sppa.job_notifications"
+    },
+    "version": {
+      "const": "0.1.0-draft.1"
+    },
+    "core_version": {
+      "const": "0.1.1"
+    },
+    "journal_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "provider",
+            "gateway"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "job.queued",
+          "job.running",
+          "job.completed",
+          "job.failed",
+          "job.canceled",
+          "job.expired"
+        ]
+      },
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true
+    },
+    "http": {
+      "type": "object",
+      "properties": {
+        "inbox_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "events_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "authentication": {
+          "const": "bearer"
+        },
+        "required_scope": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "inbox_url",
+        "events_url",
+        "authentication",
+        "required_scope"
+      ],
+      "additionalProperties": false
+    },
+    "job_observation": {
+      "type": "object",
+      "properties": {
+        "binding": {
+          "enum": [
+            "sppa_core_http",
+            "hub_http"
+          ]
+        },
+        "method": {
+          "enum": [
+            "POST",
+            "GET"
+          ]
+        },
+        "url_template": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "message_type": {
+          "enum": [
+            "job.get",
+            null
+          ]
+        }
+      },
+      "required": [
+        "binding",
+        "method",
+        "url_template",
+        "message_type"
+      ],
+      "additionalProperties": false
+    },
+    "retention": {
+      "type": "object",
+      "properties": {
+        "max_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "max_events": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "max_age_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2592000
+        },
+        "durability": {
+          "enum": [
+            "process",
+            "persistent"
+          ]
+        }
+      },
+      "required": [
+        "max_days",
+        "max_events",
+        "max_age_seconds",
+        "durability"
+      ],
+      "additionalProperties": false
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "at_least_once"
+        },
+        "ordering": {
+          "const": "journal_commit"
+        },
+        "max_batch_size": {
+          "const": 50
+        },
+        "max_streams": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "max_streams_per_owner": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "heartbeat_seconds": {
+          "const": 1
+        }
+      },
+      "required": [
+        "mode",
+        "ordering",
+        "max_batch_size",
+        "max_streams",
+        "max_streams_per_owner",
+        "heartbeat_seconds"
+      ],
+      "additionalProperties": false
+    },
+    "webhooks": {
+      "const": false
+    }
+  },
+  "required": [
+    "profile",
+    "version",
+    "core_version",
+    "journal_id",
+    "authority",
+    "events",
+    "http",
+    "job_observation",
+    "retention",
+    "delivery",
+    "webhooks"
+  ],
+  "additionalProperties": false
+}

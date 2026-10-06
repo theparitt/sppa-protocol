@@ -1,0 +1,45 @@
+{
+  "profile": "sppa.job_notifications",
+  "version": "0.1.0-draft.1",
+  "core_version": "0.1.1",
+  "journal_id": "8da6c6bd-2231-4fe7-9375-41c7de97a0a8",
+  "authority": {
+    "kind": "provider",
+    "id": "com.example.ffmpeg"
+  },
+  "events": [
+    "job.queued",
+    "job.running",
+    "job.completed",
+    "job.failed",
+    "job.canceled",
+    "job.expired"
+  ],
+  "http": {
+    "inbox_url": "https://provider.example/v1/job-notifications",
+    "events_url": "https://provider.example/v1/job-notifications/events",
+    "authentication": "bearer",
+    "required_scope": null
+  },
+  "job_observation": {
+    "binding": "sppa_core_http",
+    "method": "POST",
+    "url_template": "https://provider.example/v1/jobs/get",
+    "message_type": "job.get"
+  },
+  "retention": {
+    "max_days": 1,
+    "max_events": 10000,
+    "max_age_seconds": 3600,
+    "durability": "process"
+  },
+  "delivery": {
+    "mode": "at_least_once",
+    "ordering": "journal_commit",
+    "max_batch_size": 50,
+    "max_streams": 64,
+    "max_streams_per_owner": 2,
+    "heartbeat_seconds": 1
+  },
+  "webhooks": false
+}

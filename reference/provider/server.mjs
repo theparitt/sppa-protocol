@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { generateKeyPairSync, randomUUID } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { validate, parseJSON, envelope, sha256, canonicalHash, checkEligibility, validateParameters, transition, signDocument, ProtocolError, parseArtifact } from '../../src/core.mjs';
+import { JobNotificationJournal, enableCapabilityNotifications, NOTIFICATION_PROFILE } from '../../src/job-notifications.mjs';
 import { AdmissionGate } from '../../src/admission.mjs';
 
 const newId = prefix => prefix + '_' + randomUUID();
@@ -17,9 +18,11 @@ async function collect(req, limit) {
   return Buffer.concat(parts);
 }
 
-export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpeg', capability: definition, execution = definition.execution, providerId = 'com.example.ffmpeg', name = 'FFmpeg reference SPPA', runTask, probeRuntime, outputExtension = 'mp4' } = {}) {
+export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpeg', capability: definition, execution = definition.execution, providerId = 'com.example.ffmpeg', name = 'FFmpeg reference SPPA', runTask, probeRuntime, outputExtension = 'mp4', notifications = true } = {}) {
   if (!tokens || !Object.keys(tokens).length) throw new Error('An explicit token-to-caller map is required');
-  const capability = { ...structuredClone(definition), execution: structuredClone(execution) };
+  const capability = { ...(notifications ? enableCapabilityNotifications(definition) : structuredClone(definition)), execution: structuredClone(execution) };
+  const journal = notifications ? new JobNotificationJournal({providerId}) : null;
+  const changeJob = (job, state, at) => { transition(job.data, state, at); journal?.record(job.data); };
   validate('capability', capability);
   if (!/^[a-z0-9]+$/.test(outputExtension)) throw new Error('Invalid output extension');
   const gate = new AdmissionGate(capability.execution);
@@ -40,7 +43,7 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
   async function probe() { runtimeReady = probeRuntime ? await Promise.resolve().then(probeRuntime).catch(()=>false) : true; }
   const queued = () => queue.filter(job => job.data.status === 'queued').length;
   const health = () => ({ provider_id: providerId, status: runtimeReady ? 'healthy' : 'unavailable', observed_at: now(), valid_until: new Date(Date.now() + 60000).toISOString(), queue_depth: queued(), active_jobs: active, max_concurrency: execution.max_concurrency, source: 'provider', capabilities: [{ capability: capability.id, capability_version: capability.version, accepting_jobs: runtimeReady && (active < execution.max_concurrency || (execution.queue.enabled && queued() < execution.queue.max_depth)), capacity: { max_concurrency: execution.max_concurrency, running: active, available: execution.max_concurrency - active }, queue: { depth: queued(), max_depth: execution.queue.max_depth } }] });
-  const manifest = () => ({ sppa: '0.1.1', kind: 'provider', provider_id: providerId, name, provider_version: '0.1.1', endpoint: url + '/v1', capabilities: [capability], profiles: ['core.http-artifact'], security: { authentication: ['bearer'], receipt_algorithm: 'Ed25519', canonicalization: 'RFC8785', keys_uri: url + '/v1/keys' } });
+  const manifest = () => ({ sppa: '0.1.1', kind: 'provider', provider_id: providerId, name, provider_version: '0.1.1', endpoint: url + '/v1', capabilities: [capability], profiles: ['core.http-artifact'], security: { authentication: ['bearer'], receipt_algorithm: 'Ed25519', canonicalization: 'RFC8785', keys_uri: url + '/v1/keys' }, ...(journal ? {extensions:{[NOTIFICATION_PROFILE]:journal.descriptor(url)}} : {}) });
   const own = (item, caller) => { if (!item || item.owner !== caller) throw new ProtocolError('not_found', 'Resource not found'); return item; };
   const getArtifact = (ref, caller) => {
     const parsed = parseArtifact(ref);
@@ -59,7 +62,7 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
   function stop(job, state) {
     if (['queued', 'running'].includes(job.data.status)) {
       if (state === 'expired') job.data.error = { code: 'deadline_exceeded', message: 'Execution deadline exceeded', retryable: true };
-      transition(job.data, state); job.process?.kill('SIGKILL'); clearTimeout(job.timer);
+      changeJob(job, state); job.process?.kill('SIGKILL'); clearTimeout(job.timer);
     }
   }
   function drain() {
@@ -70,7 +73,7 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
     }
   }
   async function execute(job) {
-    active++; transition(job.data, 'running');
+    active++; changeJob(job, 'running');
     const outputFile = join(directory, newId('output') + '.' + outputExtension);
     let child;
     try {
@@ -100,10 +103,10 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
       if (job.data.status !== 'running' || Date.now() >= job.deadline) { stop(job, 'expired'); await rm(outputFile, { force: true }); return; }
       artifacts.set(outputId, { ...output, file: outputFile }); receipts.set(receiptId, { owner: job.owner, data: receipt });
       job.data.output = { artifact: output.ref, metadata: result }; job.data.receipt_id = receiptId; job.data.progress = 1;
-      transition(job.data, 'completed', finishedAt); clearTimeout(job.timer);
+      changeJob(job, 'completed', finishedAt); clearTimeout(job.timer);
     } catch {
       await rm(outputFile, { force: true });
-      if (job.data.status === 'running') { job.data.error = { code: 'execution_failed', message: 'Provider execution failed', retryable: false }; transition(job.data, 'failed'); clearTimeout(job.timer); }
+      if (job.data.status === 'running') { job.data.error = { code: 'execution_failed', message: 'Provider execution failed', retryable: false }; changeJob(job, 'failed'); clearTimeout(job.timer); }
     } finally { active--; drain(); }
   }
   function createJob(request, caller, retryOf) {
@@ -134,7 +137,7 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
     if (retryOf) data.retry_of = retryOf.data.job_id;
     const job = { owner: caller, data, deadline, lineage };
     job.timer = setTimeout(() => stop(job, 'expired'), deadline - Date.now());
-    jobs.set(data.job_id, job); dedup.set(scope, { hash: digest, job, until: Date.now() + 86400000 }); queue.push(job); drain();
+    journal?.record(data); jobs.set(data.job_id, job); dedup.set(scope, { hash: digest, job, until: Date.now() + 86400000 }); queue.push(job); drain();
     return data;
   }
   const routes = { '/v1/jobs': 'job.create', '/v1/jobs/get': 'job.get', '/v1/jobs/cancel': 'job.cancel', '/v1/jobs/retry': 'job.retry', '/v1/artifacts/get': 'artifact.get', '/v1/transfers/uploads': 'transfer.prepare_upload', '/v1/transfers/downloads': 'transfer.prepare_download', '/v1/transfers/complete': 'transfer.complete', '/v1/transfers/abort': 'transfer.abort', '/v1/health': 'health.get', '/v1/receipts/get': 'receipt.get' };
@@ -148,6 +151,7 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
       if (req.method === 'GET' && pathname === '/v1/keys') return json(200, { provider_id: providerId, keys: [{ key_id: keyId, algorithm: 'Ed25519', public_key: publicKey.export({ format: 'jwk' }), valid_from: '2026-01-01T00:00:00Z', valid_until: '2100-01-01T00:00:00Z' }] });
       const header = req.headers.authorization ?? '';
       const caller = header.startsWith('Bearer ') ? credentials.get(header.slice(7)) : undefined;
+      if (journal?.handles(pathname)) return journal.handle(req,res,{caller,authorized:()=>credentials.get(header.slice(7))===caller});
       if (!caller) throw new ProtocolError('unauthenticated', 'Bearer authentication required');
       authenticatedCaller = caller;
       const segments = pathname.split('/');
@@ -228,5 +232,5 @@ export async function createArtifactProvider({ tokens, port = 0, ffmpeg = 'ffmpe
   });
   await new Promise(resolve => server.listen(port, '127.0.0.1', resolve));
   url = `http://127.0.0.1:${server.address().port}`;
-  return { url, manifest: manifest(), publicKey, keyId, close: async () => { clearInterval(cleanup); for (const job of jobs.values()) stop(job, 'canceled'); await new Promise(resolve => server.close(resolve)); await rm(directory, { recursive: true, force: true }); } };
+  return { url, manifest: manifest(), publicKey, keyId, close: async () => { clearInterval(cleanup); for (const job of jobs.values()) stop(job, 'canceled'); journal?.close(); await new Promise(resolve => server.close(resolve)); await rm(directory, { recursive: true, force: true }); } };
 }
